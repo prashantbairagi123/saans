@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1C3A44">
+<meta name="description" content="SAANS – offline clean-air co-pilot: official AQI engine, sky-eye estimator, pollution source detective, city control simulator and exposure planner.">
+<title>SAANS – Offline Clean-Air Co-pilot</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231C3A44'/%3E%3Cpath d='M14 26c8-8 20 8 36-2M14 38c10-8 22 8 36-2' stroke='%237FE0C2' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#15262E;--ink2:#46606B;--mist:#E6EEF0;--paper:#FBFDFD;--line:#D3DEE2;
+  --leaf:#1F7A5C;--leaf2:#DDF2EA;--amber:#C9821B;
+  --c0:#3BA55C;--c1:#93BF3A;--c2:#E2BC2F;--c3:#EE8424;--c4:#D9452B;--c5:#7A1E2C;
+  --cat:#3BA55C;--haze:0;
+  --font:"Segoe UI Variable Text","Avenir Next","Inter",Roboto,"Noto Sans","Noto Sans Devanagari","Nirmala UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:var(--font);color:var(--ink);background:#C9DCE3;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+#sky{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#8EC3DA 0%,#CFE5EC 55%,#EEF4F2 100%);transition:filter 1.2s}
+#haze{position:absolute;inset:0;background:linear-gradient(180deg,#9C8F7C 0%,#BDB3A0 60%,#D4CCBC 100%);opacity:var(--haze);transition:opacity 1.2s}
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding-bottom:84px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 6px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:22px;letter-spacing:-.5px}
+.brand svg{width:30px;height:30px}
+.top-r{display:flex;gap:8px;align-items:center}
+.net{font-size:12px;padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.6);color:var(--ink2)}
+.net::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--leaf);margin-right:6px;vertical-align:1px}
+.lang{font:inherit;font-weight:700;border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:4px 10px;cursor:pointer;color:var(--ink)}
+main{flex:1;padding:4px 14px 10px}
+h1{font-size:26px;letter-spacing:-.6px;line-height:1.15;margin:8px 4px 4px}
+h2{font-size:17px;letter-spacing:-.2px;margin:0 0 10px}
+.sub{color:var(--ink2);margin:0 4px 14px;font-size:14px}
+.panel{background:rgba(251,253,253,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:22px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.7)}
+.panel.flat{background:rgba(251,253,253,.6)}
+.muted{color:var(--ink2);font-size:13px}
+.tiny{font-size:12px;color:var(--ink2)}
+button{font:inherit;color:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;cursor:pointer;font-size:14px;transition:background .2s,border-color .2s}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.seg{display:flex;background:rgba(21,38,46,.08);border-radius:14px;padding:4px;gap:4px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 3px rgba(21,38,46,.15)}
+:focus-visible{outline:3px solid #2B7FFF;outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px}
+input[type=number],input[type=text],select,textarea{font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;color:var(--ink);width:100%}
+textarea{min-height:150px;font-size:13.5px;resize:vertical}
+.btn{border:0;border-radius:14px;padding:11px 16px;font-weight:700;cursor:pointer;background:var(--ink);color:#fff}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.btn.leaf{background:var(--leaf)}
+.row{display:flex;gap:10px;align-items:center}
+.grow{flex:1}
+/* orb */
+.orbwrap{position:relative;width:270px;height:270px;margin:6px auto 2px}
+.orbwrap canvas{width:270px;height:270px;display:block}
+.orbtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
+.aqi{font-size:76px;font-weight:800;letter-spacing:-3px;line-height:1;font-variant-numeric:tabular-nums}
+.catname{font-weight:700;font-size:17px;margin-top:4px;padding:3px 12px;border-radius:999px;background:var(--cat);color:#fff}
+.pmline{font-size:13px;color:var(--ink2);margin-top:6px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 12px}
+.fact{background:rgba(251,253,253,.86);border-radius:16px;padding:10px 10px 9px}
+.fact b{display:block;font-size:20px;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.fact span{font-size:12px;color:var(--ink2);line-height:1.25;display:block}
+.advice li{margin:0 0 7px 18px}
+.impact{border-left:4px solid var(--cat);padding:2px 0 2px 10px;margin-bottom:10px;font-weight:600}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pgrid label{font-size:12.5px;color:var(--ink2);display:block}
+.pgrid label input{margin-top:3px}
+.sib{display:flex;align-items:center;gap:8px;font-size:13px;margin:5px 0}
+.sib i{display:block;height:9px;border-radius:5px;background:var(--ink)}
+.sib .lab{width:52px;font-weight:600}
+.sib .val{width:36px;text-align:right;font-variant-numeric:tabular-nums}
+.sib .track{flex:1;background:rgba(21,38,46,.08);border-radius:5px}
+.scene{width:100%;border-radius:16px;display:block;margin-bottom:10px}
+/* detect */
+.q{margin-bottom:14px}
+.q h3{font-size:14px;margin-bottom:7px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin:9px 0}
+.bar .name{font-weight:650;font-size:14.5px}
+.bar .pct{font-weight:800;font-variant-numeric:tabular-nums}
+.bar .tr{grid-column:1/3;height:10px;border-radius:6px;background:rgba(21,38,46,.08);overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:6px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.why{font-size:13px;color:var(--ink2);grid-column:1/3}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.split h4{font-size:13px;margin-bottom:5px}
+.split ul{padding-left:16px;font-size:13.5px}
+.saved{font-size:13px;border-top:1px solid var(--line);padding:8px 0}
+/* control */
+.cmp{display:flex;align-items:center;justify-content:space-around;text-align:center;padding:4px 0 10px}
+.cmp .n{font-size:46px;font-weight:800;letter-spacing:-2px;line-height:1;font-variant-numeric:tabular-nums}
+.cmp .c{font-size:12.5px;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;display:inline-block;margin-top:5px}
+.arrow{font-size:26px;color:var(--ink2)}
+.stack{display:flex;height:22px;border-radius:8px;overflow:hidden;margin:4px 0;background:rgba(21,38,46,.06)}
+.stack i{display:block;height:100%;transition:width .5s}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--ink2);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--k);margin-right:5px}
+.lever{padding:10px 0;border-top:1px solid var(--line)}
+.lever:first-child{border-top:0}
+.lever .row{justify-content:space-between}
+.lever b{font-size:14px}
+.lever .v{font-variant-numeric:tabular-nums;font-weight:800;min-width:44px;text-align:right}
+.insight{background:var(--leaf2);border-radius:16px;padding:12px 14px;font-size:14px;margin-bottom:12px}
+.insight b{color:var(--leaf)}
+/* plan */
+.chart{width:100%;display:block}
+.dayrow{display:grid;grid-template-columns:78px 1.3fr .8fr;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.dayrow select,.dayrow input{padding:6px 6px;font-size:13px;border-radius:10px}
+.dayrow .full{grid-column:1/4;display:grid;grid-template-columns:1.2fr 1fr 34px;gap:6px}
+.x{border:0;background:transparent;cursor:pointer;font-size:18px;color:var(--ink2)}
+.dose{display:flex;align-items:baseline;gap:8px;margin:6px 0}
+.dose b{font-size:38px;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+/* act */
+.act{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.act:first-of-type{border-top:0}
+.tick{flex:none;width:26px;height:26px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;background:#fff;transition:.2s}
+.act[aria-checked="true"] .tick{background:var(--leaf);border-color:var(--leaf)}
+.act[aria-checked="true"] .tick::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.act .t{font-weight:650;font-size:14.5px}
+.act .s{font-size:12.5px;color:var(--ink2)}
+.score{display:flex;gap:10px;margin-bottom:12px}
+.score div{flex:1;border-radius:18px;padding:12px;background:var(--ink);color:#fff}
+.score b{display:block;font-size:28px;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.score span{font-size:12px;opacity:.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{font-size:12.5px;padding:6px 10px;border-radius:12px;background:rgba(21,38,46,.07);color:var(--ink2)}
+.badge.on{background:#F7E7C2;color:#6B4A0B;font-weight:700}
+.myth{perspective:800px;height:138px;margin-bottom:10px;cursor:pointer}
+.myth .in{position:relative;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.myth.flip .in{transform:rotateY(180deg)}
+.myth .f,.myth .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:center}
+.myth .f{background:#fff;border:1.5px dashed #C9B48D}
+.myth .b{background:var(--ink);color:#fff;transform:rotateY(180deg);font-size:14px}
+.myth .f small,.myth .b small{font-weight:800;font-size:12px;margin-bottom:4px;opacity:.75}
+/* nav */
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;z-index:5;width:min(460px,calc(100% - 20px));display:flex;justify-content:space-around;background:rgba(21,38,46,.94);border-radius:24px;padding:7px 6px;box-shadow:0 10px 30px rgba(21,38,46,.3)}
+.tabs button{border:0;background:transparent;color:#A9BEC6;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:650;padding:6px 8px;border-radius:16px;cursor:pointer;min-width:58px}
+.tabs button svg{width:22px;height:22px}
+.tabs button[aria-selected="true"]{color:#fff;background:rgba(255,255,255,.12)}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-size:14px;opacity:0;transition:.3s;z-index:9;pointer-events:none;max-width:90%}
+#toast.on{opacity:1;transform:translateX(-50%)}
+.view{animation:enter .35s ease}
+@keyframes enter{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:900px){
+  .app{max-width:480px}
+  body::after{content:"";position:fixed}
+}
+</style>
+</head>
+<body>
+<div id="sky"><div id="haze"></div></div>
+<div class="app">
+  <header class="top">
+    <div class="brand" aria-label="SAANS">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#1C3A44"/><path d="M13 27c9-8 21 8 38-2M13 39c11-8 23 8 38-2" stroke="#7FE0C2" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+      <span>saans</span>
+    </div>
+    <div class="top-r"><span id="net" class="net"></span><button id="lang" class="lang" aria-label="Switch language">हिं</button></div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="tabs" role="tablist" id="tabs"></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ---------- storage (safe) ---------- */
+const store={get(k,d){try{const v=localStorage.getItem("saans:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("saans:"+k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- i18n ---------- */
+const T={en:{
+ tAir:"Air",tDetect:"Detect",tControl:"Control",tPlan:"Plan",tAct:"Act",
+ offline:"Offline ready",online:"Online · works offline too",
+ airH:"Your air, decoded",airS:"Set today's reading three ways — no internet, no sensor needed.",
+ mDial:"Quick dial",mMeter:"Pollutant meter",mSky:"Sky-eye",
+ dialHint:"Move to the AQI you saw on any display, news or app.",
+ meterHint:"Enter any pollutant readings (24-h / 8-h averages). SAANS computes the official National AQI using CPCB breakpoints.",
+ skyHint:"Look at the farthest landmark you can see clearly. Slide until the picture matches your view.",
+ vis:"Visibility",humid:"Air feels",dry:"Dry",normal:"Normal",humidW:"Humid",foggy:"Misty",
+ skyEst:"Estimated PM2.5 from visibility (optical extinction model). Accuracy ±35% – use as a guide.",
+ cig:"cigarettes' worth of PM2.5 if breathed all day",grap:"GRAP stage (Delhi-NCR action plan)",dom:"dominant pollutant",none:"None",
+ who:"Who is breathing?",pGen:"Everyone",pChild:"Child",pOld:"Older adult",pAsth:"Asthma / heart",pPreg:"Pregnant",pWork:"Outdoor worker",
+ doNow:"What to do now",
+ cat0:"Good",cat1:"Satisfactory",cat2:"Moderate",cat3:"Poor",cat4:"Very poor",cat5:"Severe",
+ imp0:"Minimal impact.",imp1:"Minor breathing discomfort to sensitive people.",imp2:"Breathing discomfort to people with lung or heart disease, children and older adults.",imp3:"Breathing discomfort to most people on prolonged exposure.",imp4:"Respiratory illness likely on prolonged exposure.",imp5:"Affects healthy people; serious for those with existing disease.",
+ detH:"Pollution source detective",detS:"Answer what your senses tell you. SAANS reasons out the likely source and shows its evidence.",
+ qSeason:"Season",qTime:"Time of day",qSmell:"What do you smell?",qSky:"How does the haze look?",qNear:"What is nearby?",qFest:"Festival or celebrations around?",qWind:"Wind",
+ sPost:"Oct–Nov",sWin:"Dec–Feb",sSum:"Mar–Jun",sMon:"Jul–Sep",
+ tm:"Early morning",tr:"Rush hour",ta:"Afternoon",tn:"Night",
+ smSmoke:"Burnt leaves / wood",smDiesel:"Diesel / exhaust",smChem:"Sulphur / chemical",smPlastic:"Burnt plastic",smDust:"Dusty / earthy",smNone:"Nothing special",
+ skBrown:"Brownish band",skGrey:"Thick grey-white",skTan:"Yellow-tan, dusty",skPlume:"Visible smoke column",skClear:"Fairly clear",
+ nRoad:"Busy road",nCons:"Construction",nInd:"Factory / power plant",nDump:"Garbage dump",nFarm:"Farmland",nHomes:"Dense housing",
+ yes:"Yes",no:"No",wCalm:"Calm, still",wBreeze:"Breezy",wStrong:"Strong, dry",
+ likely:"Most likely sources",whyT:"Evidence",youDo:"You can",authDo:"Authorities should",
+ report:"Report it",reportS:"A ready complaint, prepared offline. Copy it into your city's pollution complaint channel (for example CPCB's Sameer app or municipal helpline) when you're online.",
+ loc:"Location / landmark",copy:"Copy complaint",save:"Save to send later",savedT:"Saved reports",copied:"Copied to clipboard",savedOk:"Saved on this device",copyFail:"Select the text and copy it manually",
+ conH:"City control lab",conS:"What if your city acted? Pull the levers and watch the air respond.",
+ now:"Today",after:"With action",srcMix:"Where today's PM2.5 comes from",
+ lvVeh:"Public transport, EVs, no idling",lvStub:"Crop-residue management, zero farm fires",lvDust:"Road & construction dust control",lvInd:"Clean fuels & scrubbers in industry",lvWaste:"Zero open waste burning",lvHome:"Clean cooking & heating (LPG / electric)",
+ srcVeh:"Vehicles",srcStub:"Crop & biomass fires",srcDust:"Dust",srcInd:"Industry & power",srcWaste:"Waste burning",srcHome:"Household fuels",srcReg:"Regional & secondary",srcFire:"Firecrackers",
+ prGrap:"Emergency (GRAP)",prCit:"Citizen power",prMax:"Full ambition",prReset:"Reset",
+ bestLever:"Biggest single lever this season:",health:"Health dividend:",healthTail:"fewer cigarettes' worth of PM2.5 breathed by every resident, every day (22 µg/m³ for 24 h ≈ 1 cigarette)",
+ mixNote:"Illustrative source mix for a north-Indian city in this season, adapted from published source-apportionment studies.",
+ planH:"Plan a cleaner-breathing day",planS:"PM2.5 swings through the day. SAANS finds your cleanest window and calculates your actual dose.",
+ bestWin:"Best outdoor window",worstWin:"Avoid",myDay:"My day",add:"Add activity",
+ doseL:"µg of PM2.5 inhaled today",vsClean:"× a WHO clean-air day",
+ aSleep:"Sleeping",aSit:"Sitting / study",aWalk:"Walking",aCycle:"Cycling",aRun:"Running / sport",
+ wOut:"Outdoors",wOpen:"Indoors, windows open",wClosed:"Indoors, windows shut",wPur:"Indoors + purifier",wCar:"Car, AC recirculate",
+ mkNone:"No mask",mkCloth:"Cloth mask",mkSurg:"Surgical mask",mkN95:"N95, good fit",
+ tipMove:"Smart tip: move",tipTo:"to",tipSave:"to cut your dose by",
+ purH:"Size a room purifier",room:"Room (L × W × H, metres)",cadr:"Clean air delivery rate needed for 5 air changes/hour",
+ actH:"Act for cleaner air",actS:"Small daily choices, counted. Your record stays on this device.",
+ pts:"clean-air points",streak:"day streak",co2:"kg CO₂ avoided",
+ a1:"Took public transport, walked or cycled",a1s:"Swapping a 10 km car trip saves ≈2 kg CO₂",
+ a2:"Switched engine off at a red light",a2s:"Idling > 10 s burns more than restarting",
+ a3:"Segregated waste, burnt nothing",a3s:"Open burning is a top winter source",
+ a4:"Reported a pollution source",a4s:"Use the Detect tab to draft it",
+ a5:"Carpooled with someone",a5s:"Half the trips, half the exhaust",
+ a6:"Kept tyres inflated / car serviced",a6s:"Cuts fuel use and emissions",
+ a7:"Said no to firecrackers",a7s:"One night can push AQI to Severe",
+ a8:"Taught one person about AQI",a8s:"Awareness multiplies action",
+ badgesT:"Badges",mythsT:"Myth or fact? Tap to flip",myth:"MYTH",fact:"FACT",
+ b1:"First breath",b2:"Week of clean air",b3:"Source hunter",b4:"100 points",
+ resetDay:"New day"
+},hi:{
+ tAir:"हवा",tDetect:"पता करें",tControl:"नियंत्रण",tPlan:"योजना",tAct:"कदम",
+ offline:"ऑफ़लाइन तैयार",online:"ऑनलाइन · ऑफ़लाइन भी चलता है",
+ airH:"आपकी हवा, आसान भाषा में",airS:"आज की रीडिंग तीन तरीकों से दर्ज करें — बिना इंटरनेट, बिना सेंसर।",
+ mDial:"त्वरित डायल",mMeter:"प्रदूषक मीटर",mSky:"आसमान-दृष्टि",
+ dialHint:"किसी डिस्प्ले, समाचार या ऐप में देखा AQI चुनें।",
+ meterHint:"किसी भी प्रदूषक की रीडिंग डालें। SAANS CPCB ब्रेकपॉइंट से आधिकारिक राष्ट्रीय AQI निकालता है।",
+ skyHint:"सबसे दूर साफ़ दिखने वाली चीज़ देखें। स्लाइडर तब तक खिसकाएँ जब तक चित्र आपके दृश्य जैसा न हो।",
+ vis:"दृश्यता",humid:"हवा कैसी लगती है",dry:"सूखी",normal:"सामान्य",humidW:"नम",foggy:"धुंधली",
+ skyEst:"दृश्यता से अनुमानित PM2.5 (प्रकाशीय मॉडल)। ±35% सटीकता – मार्गदर्शन हेतु।",
+ cig:"सिगरेट के बराबर PM2.5, यदि पूरा दिन साँस लें",grap:"GRAP चरण (दिल्ली-एनसीआर योजना)",dom:"मुख्य प्रदूषक",none:"कोई नहीं",
+ who:"कौन साँस ले रहा है?",pGen:"सभी",pChild:"बच्चा",pOld:"बुज़ुर्ग",pAsth:"दमा / हृदय रोग",pPreg:"गर्भवती",pWork:"बाहर काम करने वाले",
+ doNow:"अभी क्या करें",
+ cat0:"अच्छा",cat1:"संतोषजनक",cat2:"मध्यम",cat3:"ख़राब",cat4:"बहुत ख़राब",cat5:"गंभीर",
+ imp0:"न्यूनतम प्रभाव।",imp1:"संवेदनशील लोगों को हल्की साँस की तकलीफ़।",imp2:"फेफड़े या हृदय रोगियों, बच्चों और बुज़ुर्गों को साँस की तकलीफ़।",imp3:"लंबे समय तक रहने पर अधिकांश लोगों को साँस की तकलीफ़।",imp4:"लंबे संपर्क से साँस की बीमारी संभव।",imp5:"स्वस्थ लोग भी प्रभावित; रोगियों के लिए गंभीर।",
+ detH:"प्रदूषण स्रोत जासूस",detS:"जो आप महसूस कर रहे हैं वह बताइए। SAANS संभावित स्रोत और उसका प्रमाण बताता है।",
+ qSeason:"मौसम",qTime:"दिन का समय",qSmell:"कैसी गंध है?",qSky:"धुंध कैसी दिखती है?",qNear:"पास में क्या है?",qFest:"आसपास त्योहार या जश्न?",qWind:"हवा",
+ sPost:"अक्टू–नवं",sWin:"दिसं–फ़र",sSum:"मार्च–जून",sMon:"जुला–सितं",
+ tm:"सुबह जल्दी",tr:"भीड़ का समय",ta:"दोपहर",tn:"रात",
+ smSmoke:"जली पत्तियाँ / लकड़ी",smDiesel:"डीज़ल / धुआँ",smChem:"गंधक / रसायन",smPlastic:"जला प्लास्टिक",smDust:"धूल / मिट्टी",smNone:"कुछ ख़ास नहीं",
+ skBrown:"भूरी परत",skGrey:"घनी सफ़ेद-धूसर",skTan:"पीली, धूल भरी",skPlume:"धुएँ का स्तंभ",skClear:"लगभग साफ़",
+ nRoad:"व्यस्त सड़क",nCons:"निर्माण कार्य",nInd:"कारख़ाना / बिजलीघर",nDump:"कूड़े का ढेर",nFarm:"खेत",nHomes:"घनी बस्ती",
+ yes:"हाँ",no:"नहीं",wCalm:"शांत",wBreeze:"हल्की हवा",wStrong:"तेज़, सूखी",
+ likely:"सबसे संभावित स्रोत",whyT:"प्रमाण",youDo:"आप कर सकते हैं",authDo:"प्रशासन को चाहिए",
+ report:"शिकायत करें",reportS:"ऑफ़लाइन तैयार शिकायत। ऑनलाइन होने पर अपने शहर के शिकायत चैनल (जैसे CPCB का समीर ऐप या नगर निगम हेल्पलाइन) में भेजें।",
+ loc:"स्थान / पहचान चिह्न",copy:"शिकायत कॉपी करें",save:"बाद में भेजने हेतु सहेजें",savedT:"सहेजी शिकायतें",copied:"कॉपी हो गया",savedOk:"इस डिवाइस पर सहेजा गया",copyFail:"टेक्स्ट चुनकर स्वयं कॉपी करें",
+ conH:"शहर नियंत्रण प्रयोगशाला",conS:"अगर आपका शहर कदम उठाए तो? लीवर खींचें और हवा का बदलाव देखें।",
+ now:"आज",after:"कदम के बाद",srcMix:"आज का PM2.5 कहाँ से आता है",
+ lvVeh:"सार्वजनिक परिवहन, ईवी, इंजन बंद",lvStub:"पराली प्रबंधन, खेतों में आग शून्य",lvDust:"सड़क व निर्माण धूल नियंत्रण",lvInd:"उद्योग में स्वच्छ ईंधन व स्क्रबर",lvWaste:"कूड़ा जलाना पूर्णतः बंद",lvHome:"स्वच्छ खाना पकाना (LPG / बिजली)",
+ srcVeh:"वाहन",srcStub:"पराली व बायोमास आग",srcDust:"धूल",srcInd:"उद्योग व बिजली",srcWaste:"कूड़ा जलाना",srcHome:"घरेलू ईंधन",srcReg:"क्षेत्रीय व द्वितीयक",srcFire:"पटाख़े",
+ prGrap:"आपात (GRAP)",prCit:"नागरिक शक्ति",prMax:"पूर्ण संकल्प",prReset:"रीसेट",
+ bestLever:"इस मौसम का सबसे बड़ा लीवर:",health:"स्वास्थ्य लाभ:",healthTail:"सिगरेट के बराबर PM2.5 कम – हर निवासी, हर दिन (24 घंटे 22 µg/m³ ≈ 1 सिगरेट)",
+ mixNote:"इस मौसम में उत्तर भारतीय शहर का उदाहरणात्मक स्रोत मिश्रण, प्रकाशित अध्ययनों पर आधारित।",
+ planH:"साफ़ साँस वाले दिन की योजना",planS:"PM2.5 दिन भर बदलता है। SAANS सबसे साफ़ समय और आपकी वास्तविक ख़ुराक निकालता है।",
+ bestWin:"बाहर जाने का सबसे अच्छा समय",worstWin:"बचें",myDay:"मेरा दिन",add:"गतिविधि जोड़ें",
+ doseL:"µg PM2.5 आज साँस में गया",vsClean:"× WHO स्वच्छ-हवा दिन",
+ aSleep:"सोना",aSit:"बैठना / पढ़ाई",aWalk:"चलना",aCycle:"साइकिल",aRun:"दौड़ / खेल",
+ wOut:"बाहर",wOpen:"अंदर, खिड़की खुली",wClosed:"अंदर, खिड़की बंद",wPur:"अंदर + प्यूरीफ़ायर",wCar:"कार, AC रीसर्कुलेट",
+ mkNone:"मास्क नहीं",mkCloth:"कपड़े का मास्क",mkSurg:"सर्जिकल मास्क",mkN95:"N95, सही फ़िट",
+ tipMove:"स्मार्ट सुझाव:",tipTo:"को",tipSave:"पर करें, ख़ुराक घटेगी",
+ purH:"कमरे का प्यूरीफ़ायर आकार",room:"कमरा (ल × चौ × ऊँ, मीटर)",cadr:"प्रति घंटा 5 वायु-परिवर्तन हेतु आवश्यक CADR",
+ actH:"स्वच्छ हवा के लिए कदम",actS:"छोटे रोज़ाना फ़ैसले, गिने हुए। आपका रिकॉर्ड इसी डिवाइस पर रहता है।",
+ pts:"स्वच्छ-हवा अंक",streak:"दिन लगातार",co2:"kg CO₂ बचाया",
+ a1:"सार्वजनिक परिवहन, पैदल या साइकिल",a1s:"10 km कार यात्रा छोड़ने से ≈2 kg CO₂ बचता है",
+ a2:"लाल बत्ती पर इंजन बंद किया",a2s:"10 सेकंड से ज़्यादा आइडलिंग अधिक ईंधन जलाती है",
+ a3:"कूड़ा अलग किया, कुछ नहीं जलाया",a3s:"खुले में जलाना सर्दियों का बड़ा स्रोत है",
+ a4:"प्रदूषण स्रोत की शिकायत की",a4s:"'पता करें' टैब से शिकायत बनाएँ",
+ a5:"किसी के साथ कारपूल किया",a5s:"आधी यात्राएँ, आधा धुआँ",
+ a6:"टायर में हवा / गाड़ी सर्विस",a6s:"ईंधन और उत्सर्जन घटता है",
+ a7:"पटाख़ों को ना कहा",a7s:"एक रात AQI को गंभीर बना सकती है",
+ a8:"एक व्यक्ति को AQI समझाया",a8s:"जागरूकता से कदम बढ़ते हैं",
+ badgesT:"बैज",mythsT:"मिथक या तथ्य? पलटने के लिए टैप करें",myth:"मिथक",fact:"तथ्य",
+ b1:"पहली साँस",b2:"स्वच्छ हवा सप्ताह",b3:"स्रोत खोजी",b4:"100 अंक",
+ resetDay:"नया दिन"
+}};
+const S=Object.assign({lang:"en",tab:"air",mode:"dial",aqi:186,pm:null,profile:"pGen",vis:4,rh:"normal",meter:{},det:{},levers:{veh:0,stub:0,dust:0,ind:0,waste:0,home:0},day:null,room:[4,3.5,3],acts:{},hist:{},reports:[],myths:{}},store.get("state",{}));
+const t=k=>(T[S.lang]&&T[S.lang][k])||T.en[k]||k;
+const save=()=>store.set("state",S);
+
+/* ---------- CPCB National AQI engine ---------- */
+const AQ=[0,50,100,200,300,400,500];
+const BP={pm25:[0,30,60,90,120,250,380],pm10:[0,50,100,250,350,430,510],no2:[0,40,80,180,280,400,520],o3:[0,50,100,168,208,748,1000],co:[0,1,2,10,17,34,46],so2:[0,40,80,380,800,1600,2100],nh3:[0,200,400,800,1200,1800,2400]};
+const PNAME={pm25:"PM2.5",pm10:"PM10",no2:"NO₂",o3:"O₃",co:"CO",so2:"SO₂",nh3:"NH₃"};
+const PUNIT={pm25:"µg/m³",pm10:"µg/m³",no2:"µg/m³",o3:"µg/m³",co:"mg/m³",so2:"µg/m³",nh3:"µg/m³"};
+function subIndex(p,c){const b=BP[p];if(c==null||isNaN(c)||c<0)return null;if(c>=b[6])return 500;for(let i=1;i<7;i++)if(c<=b[i])return Math.round(AQ[i-1]+(c-b[i-1])*(AQ[i]-AQ[i-1])/(b[i]-b[i-1]));return 500}
+function aqiToPm(a){const b=BP.pm25;for(let i=1;i<7;i++)if(a<=AQ[i])return b[i-1]+(a-AQ[i-1])*(b[i]-b[i-1])/(AQ[i]-AQ[i-1]);return b[6]}
+const catOf=a=>a<=50?0:a<=100?1:a<=200?2:a<=300?3:a<=400?4:5;
+const CATC=["#3BA55C","#93BF3A","#E2BC2F","#EE8424","#D9452B","#7A1E2C"];
+const grapOf=a=>a>450?"IV":a>400?"III":a>300?"II":a>200?"I":"–";
+function season(){const m=new Date().getMonth();return m===9||m===10?"sPost":m===11||m<=1?"sWin":m<=5?"sSum":"sMon"}
+
+/* ---------- current reading (derived) ---------- */
+function reading(){
+  let aqi=S.aqi,pm=aqiToPm(S.aqi),dom="pm25",subs=null;
+  if(S.mode==="meter"){subs={};let mx=-1;for(const p in BP){const v=parseFloat(S.meter[p]);const si=subIndex(p,v);if(si!=null){subs[p]=si;if(si>mx){mx=si;dom=p}}}
+    if(mx>=0){aqi=mx;pm=parseFloat(S.meter.pm25);if(isNaN(pm))pm=aqiToPm(Math.min(aqi,subs.pm25!=null?subs.pm25:aqi))}else{aqi=0;pm=0;dom=null}}
+  if(S.mode==="sky"){pm=skyPm(S.vis,S.rh);aqi=subIndex("pm25",pm)}
+  return{aqi:Math.round(aqi),pm:Math.max(0,pm),cat:catOf(aqi),dom,subs}
+}
+const RHF={dry:1.15,normal:1.45,humidW:1.9,foggy:2.6};
+function skyPm(vKm,rh){const b=3912/vKm-13;return clamp(b/(4*RHF[rh]),3,900)}
+
+/* ---------- ambient theming ---------- */
+function applyMood(r){const root=document.documentElement;root.style.setProperty("--cat",CATC[r.cat]);root.style.setProperty("--haze",clamp((r.aqi-60)/420,0,.92).toFixed(2));}
+
+/* ---------- tabs ---------- */
+const ICON={
+ air:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8"/></svg>',
+ detect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5M8 10.5h5M10.5 8v5"/></svg>',
+ control:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4v16M12 4v16M19 4v16"/><circle cx="5" cy="14" r="2.2" fill="currentColor"/><circle cx="12" cy="8" r="2.2" fill="currentColor"/><circle cx="19" cy="16" r="2.2" fill="currentColor"/></svg>',
+ plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17c3-8 5-8 7-3s4 4 6-2 3-6 5-4"/><path d="M3 21h18"/></svg>',
+ act:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21c-5-3-8-7-8-12a8 8 0 0 1 16 0c0 5-3 9-8 12z"/><path d="m8.5 11 2.5 2.5L16 8.5"/></svg>'};
+const TABS=[["air","tAir"],["detect","tDetect"],["control","tControl"],["plan","tPlan"],["act","tAct"]];
+function renderTabs(){$("#tabs").innerHTML=TABS.map(([id,k])=>`<button role="tab" data-tab="${id}" aria-selected="${S.tab===id}">${ICON[id]}<span>${t(k)}</span></button>`).join("")}
+function chips(group,opts,cur,multi){return `<div class="chips" role="group">${opts.map(o=>{const on=multi?(cur||[]).includes(o):cur===o;return `<button class="chip" data-g="${group}" data-v="${o}" aria-pressed="${on}">${esc(t(o))}</button>`}).join("")}</div>`}
+
+/* ================= AIR ================= */
+function viewAir(){
+  const r=reading();
+  let measure="";
+  if(S.mode==="dial")measure=`<p class="muted" style="margin-bottom:6px">${t("dialHint")}</p><div class="row"><input type="range" min="0" max="500" value="${S.aqi}" id="dial" aria-label="AQI"><input type="number" min="0" max="500" value="${S.aqi}" id="dialN" style="width:80px" aria-label="AQI value"></div>`;
+  if(S.mode==="meter")measure=`<p class="muted" style="margin-bottom:10px">${t("meterHint")}</p><div class="pgrid">${Object.keys(BP).map(p=>`<label>${PNAME[p]} <span class="tiny">${PUNIT[p]}</span><input type="number" min="0" step="any" inputmode="decimal" data-pol="${p}" value="${S.meter[p]??""}" placeholder="–"></label>`).join("")}</div><div id="subs" style="margin-top:10px">${subBars(r)}</div>`;
+  if(S.mode==="sky")measure=`<p class="muted" style="margin-bottom:8px">${t("skyHint")}</p>${scene(S.vis)}<div class="row"><span class="tiny" style="min-width:64px">${t("vis")}</span><input type="range" min="0" max="100" value="${Math.round(Math.log(S.vis/0.2)/Math.log(250)*100)}" id="visR" aria-label="Visibility"><b id="visV" style="min-width:58px;text-align:right">${S.vis<1?S.vis.toFixed(1):Math.round(S.vis)} km</b></div><p class="tiny" style="margin:8px 0 6px">${t("humid")}</p>${chips("rh",["dry","normal","humidW","foggy"],S.rh)}<p class="tiny" style="margin-top:10px">${t("skyEst")}</p>`;
+  return `<div class="view">
+  <div class="orbwrap"><canvas id="orb" width="540" height="540" aria-hidden="true"></canvas>
+   <div class="orbtxt"><div class="aqi" id="aqiN">${r.aqi}</div><div class="catname" id="catN">${t("cat"+r.cat)}</div><div class="pmline" id="pmL">PM2.5 ≈ ${Math.round(r.pm)} µg/m³ · AQI</div></div></div>
+  <div class="facts">
+   <div class="fact"><b id="fCig">${(r.pm/22).toFixed(1)}</b><span>${t("cig")}</span></div>
+   <div class="fact"><b id="fGrap">${grapOf(r.aqi)}</b><span>${t("grap")}</span></div>
+   <div class="fact"><b id="fDom">${r.dom?PNAME[r.dom]:t("none")}</b><span>${t("dom")}</span></div>
+  </div>
+  <section class="panel">
+   <div class="seg" role="group">${[["dial","mDial"],["meter","mMeter"],["sky","mSky"]].map(([m,k])=>`<button data-mode="${m}" aria-pressed="${S.mode===m}">${t(k)}</button>`).join("")}</div>
+   ${measure}
+  </section>
+  <section class="panel"><h2>${t("who")}</h2>${chips("profile",["pGen","pChild","pOld","pAsth","pPreg","pWork"],S.profile)}</section>
+  <section class="panel" id="advice">${adviceHtml(r)}</section>
+  </div>`;
+}
+function subBars(r){if(!r.subs||!Object.keys(r.subs).length)return"";return Object.entries(r.subs).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<div class="sib"><span class="lab">${PNAME[p]}</span><span class="track"><i style="width:${v/5}%;background:${CATC[catOf(v)]}"></i></span><span class="val">${v}</span></div>`).join("")}
+function scene(v){
+  const haze="#C7C2B5",far=[["#5F7F8C",20,40],["#557584",8,62],["#4A6A78",3,84],["#3E5C69",1,108]];
+  const mix=(a,b,f)=>{const pa=a.match(/\w\w/g).map(x=>parseInt(x,16)),pb=b.match(/\w\w/g).map(x=>parseInt(x,16));return "rgb("+pa.map((x,i)=>Math.round(x*(1-f)+pb[i]*f)).join(",")+")"};
+  const sky=mix("#7DB8D6",haze,clamp(1-v/25,0,1));
+  const ridges=far.map(([c,d,y],i)=>{const f=1-Math.exp(-3.912*d/v);const pts=[];for(let x=0;x<=320;x+=20)pts.push(`${x},${y-10-14*Math.sin(x/37+i*1.7)-8*Math.cos(x/23+i)}`);return `<path d="M0,170 L${pts.join(" L")} L320,170Z" fill="${mix(c.slice(1),haze.slice(1),clamp(f,0,1))}"/>`}).join("");
+  const tw=1-Math.exp(-3.912*3/v);
+  return `<svg class="scene" viewBox="0 0 320 150" role="img" aria-label="Visibility preview"><rect width="320" height="150" fill="${sky}"/>${ridges}<g fill="${mix("2E4650",haze.slice(1),clamp(tw,0,1))}"><rect x="210" y="58" width="10" height="40"/><rect x="224" y="46" width="12" height="52"/><rect x="240" y="66" width="9" height="32"/></g><rect y="128" width="320" height="22" fill="#3B4F44"/><text x="10" y="18" font-size="11" fill="#fff" opacity=".85">20 km · 8 km · 3 km · 1 km</text></svg>`;
+}
+const ADV={
+ pGen:[["Enjoy outdoor activity."],["Enjoy outdoors; sensitive people watch for symptoms."],["Cut long or intense outdoor exercise.","Keep windows shut during traffic peaks."],["Avoid outdoor exercise; walk, don't run.","Wear an N95 outdoors.","Run a purifier in the bedroom."],["Stay indoors as much as possible.","N95 for any trip out.","Close windows; seal gaps with wet cloth."],["Avoid going outside.","N95 mandatory outdoors.","Purifier on high; no incense, frying or candles indoors."]],
+ pChild:[["Outdoor play is great today."],["Play outside; avoid busy roads."],["Shorter outdoor play, away from traffic."],["Move play and sports indoors.","Child-size N95 for school travel."],["Keep children indoors; schools may shift online.","Watch for cough or wheeze."],["Keep children indoors in the cleanest room.","Seek care for breathlessness."]],
+ pOld:[["A morning walk is fine."],["Walk in parks, away from roads."],["Walk indoors or in the afternoon window.","Keep medicines handy."],["Skip outdoor walks today.","Check BP and breathing."],["Stay indoors; use a purifier.","Contact a doctor if chest feels tight."],["Stay in the cleanest room.","Seek care for any chest pain or breathlessness."]],
+ pAsth:[["Normal routine."],["Carry your inhaler."],["Carry reliever inhaler; avoid exertion outdoors.","Follow your action plan."],["Take preventer as prescribed; avoid going out.","N95 if you must go out."],["Stay indoors; keep reliever close.","Seek care if reliever is needed more than usual."],["Do not exert yourself at all.","Have an emergency plan ready."]],
+ pPreg:[["Enjoy a walk outside."],["Prefer green, low-traffic routes."],["Limit time near traffic.","Ventilate when air is cleaner (afternoon)."],["Avoid outdoor exertion; N95 outdoors.","Use a purifier where you sleep."],["Stay indoors; purifier on.","Discuss any symptoms with your doctor."],["Stay indoors in a purified room.","Consult your doctor on any discomfort."]],
+ pWork:[["Normal work."],["Take breaks away from traffic."],["Wear a mask near roads; hydrate.","Rotate to shaded, less busy spots."],["N95 throughout the shift.","Employers should give rest breaks indoors."],["N95 and shorter shifts.","Wet-clean dust at site; employer duty under GRAP."],["Outdoor heavy work should pause.","Construction halts under GRAP Stage IV."]]};
+const ADVHI={pChild:[["आज बाहर खेलना बढ़िया है।"],["बाहर खेलें; व्यस्त सड़कों से दूर।"],["बाहर कम समय खेलें, ट्रैफ़िक से दूर।"],["खेल घर के अंदर करें।","स्कूल आने-जाने में बच्चों का N95।"],["बच्चों को घर में रखें; स्कूल ऑनलाइन हो सकते हैं।","खाँसी या घरघराहट पर ध्यान दें।"],["बच्चों को सबसे साफ़ कमरे में रखें।","साँस फूलने पर डॉक्टर से मिलें।"]],pOld:[["सुबह की सैर ठीक है।"],["सड़कों से दूर पार्क में टहलें।"],["घर में या दोपहर में टहलें।","दवाइयाँ पास रखें।"],["आज बाहर सैर न करें।","BP और साँस पर नज़र रखें।"],["घर में रहें; प्यूरीफ़ायर चलाएँ।","सीने में जकड़न हो तो डॉक्टर से संपर्क करें।"],["सबसे साफ़ कमरे में रहें।","सीने में दर्द या साँस फूलने पर तुरंत इलाज लें।"]],pAsth:[["सामान्य दिनचर्या।"],["इनहेलर साथ रखें।"],["रिलीवर इनहेलर साथ रखें; बाहर मेहनत न करें।","अपनी एक्शन प्लान का पालन करें।"],["प्रिवेंटर दवा समय पर लें; बाहर न जाएँ।","जाना ज़रूरी हो तो N95।"],["घर में रहें; रिलीवर पास रखें।","रिलीवर ज़्यादा लगे तो डॉक्टर से मिलें।"],["बिल्कुल मेहनत न करें।","आपात योजना तैयार रखें।"]],pPreg:[["बाहर टहलने का आनंद लें।"],["हरे-भरे, कम ट्रैफ़िक वाले रास्ते चुनें।"],["ट्रैफ़िक के पास कम समय बिताएँ।","दोपहर में हवादारी करें।"],["बाहर मेहनत न करें; बाहर N95।","सोने के कमरे में प्यूरीफ़ायर।"],["घर में रहें; प्यूरीफ़ायर चालू रखें।","कोई लक्षण हो तो डॉक्टर से बात करें।"],["साफ़ किए गए कमरे में रहें।","किसी भी असुविधा पर डॉक्टर से परामर्श लें।"]],pWork:[["सामान्य काम।"],["ट्रैफ़िक से दूर विश्राम लें।"],["सड़क के पास मास्क पहनें; पानी पीते रहें।","छायादार, कम भीड़ वाली जगह बदलें।"],["पूरी पाली में N95।","नियोक्ता अंदर विश्राम दें।"],["N95 और छोटी पालियाँ।","साइट पर धूल गीली करें; GRAP में नियोक्ता की ज़िम्मेदारी।"],["भारी बाहरी काम रुकना चाहिए।","GRAP चरण IV में निर्माण बंद।"]],pGen:[["बाहर की गतिविधि का आनंद लें।"],["आनंद लें; संवेदनशील लोग लक्षणों पर ध्यान दें।"],["लंबा/कड़ा बाहरी व्यायाम घटाएँ।","ट्रैफ़िक के समय खिड़कियाँ बंद रखें।"],["बाहर व्यायाम न करें; दौड़ें नहीं, चलें।","बाहर N95 पहनें।","शयनकक्ष में प्यूरीफ़ायर चलाएँ।"],["जितना हो सके घर में रहें।","बाहर जाने पर N95।","खिड़कियाँ बंद; दरारें गीले कपड़े से ढकें।"],["बाहर जाने से बचें।","बाहर N95 अनिवार्य।","प्यूरीफ़ायर तेज़; अगरबत्ती, तलना, मोमबत्ती नहीं।"]]};
+function adviceHtml(r){const set=(S.lang==="hi"&&ADVHI[S.profile])?ADVHI[S.profile]:ADV[S.profile];const list=set[r.cat];
+  return `<h2>${t("doNow")}</h2><div class="impact">${t("imp"+r.cat)}</div><ul class="advice">${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`}
+function updAir(){const r=reading();applyMood(r);
+  const set=(id,v)=>{const e=$(id);if(e)e.textContent=v};
+  set("#aqiN",r.aqi);set("#catN",t("cat"+r.cat));set("#pmL",`PM2.5 ≈ ${Math.round(r.pm)} µg/m³ · AQI`);set("#fCig",(r.pm/22).toFixed(1));set("#fGrap",grapOf(r.aqi));set("#fDom",r.dom?PNAME[r.dom]:t("none"));
+  const a=$("#advice");if(a)a.innerHTML=adviceHtml(r);const sb=$("#subs");if(sb)sb.innerHTML=subBars(r);orb.target=r;}
+
+/* orb particles */
+const orb={parts:[],target:null,raf:0};
+function orbLoop(){
+  const c=$("#orb");if(!c){orb.raf=0;return}
+  const g=c.getContext("2d"),W=540,R=232,cx=270,cy=270,r=orb.target||reading();
+  const want=Math.round(clamp(r.pm*1.6,10,700));
+  while(orb.parts.length<want)orb.parts.push({a:Math.random()*6.283,d:Math.sqrt(Math.random())*R*.94,s:.6+Math.random()*2.6,v:(Math.random()-.5)*.004,dr:(Math.random()-.5)*.25,o:.25+Math.random()*.6});
+  if(orb.parts.length>want)orb.parts.length=want;
+  g.clearRect(0,0,W,W);
+  const col=CATC[r.cat];
+  const grd=g.createRadialGradient(cx,cy-60,20,cx,cy,R);grd.addColorStop(0,"rgba(255,255,255,.95)");grd.addColorStop(1,"rgba(232,240,242,.85)");
+  g.fillStyle=grd;g.beginPath();g.arc(cx,cy,R,0,6.283);g.fill();
+  g.save();g.beginPath();g.arc(cx,cy,R-2,0,6.283);g.clip();
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for(const p of orb.parts){if(!reduce){p.a+=p.v;p.d+=p.dr;if(p.d>R*.95||p.d<4)p.dr*=-1}
+    g.globalAlpha=p.o*(.5+.5*Math.min(1,r.pm/150));g.fillStyle=r.cat>=4?"#4A3A30":r.cat>=3?"#6F5A45":"#7C8A86";
+    g.beginPath();g.arc(cx+Math.cos(p.a)*p.d,cy+Math.sin(p.a)*p.d,p.s,0,6.283);g.fill()}
+  g.restore();g.globalAlpha=1;
+  g.lineWidth=14;g.lineCap="round";g.strokeStyle="rgba(21,38,46,.08)";g.beginPath();g.arc(cx,cy,R+12,0,6.283);g.stroke();
+  g.strokeStyle=col;g.beginPath();g.arc(cx,cy,R+12,-1.5708,-1.5708+6.283*clamp(r.aqi/500,0.005,1));g.stroke();
+  orb.raf=requestAnimationFrame(orbLoop);
+}
+
+/* ================= DETECT ================= */
+const SRC=["stub","veh","dust","ind","waste","fire","home"];
+const SRCK={stub:"srcStub",veh:"srcVeh",dust:"srcDust",ind:"srcInd",waste:"srcWaste",fire:"srcFire",home:"srcHome"};
+const SRCC={stub:"#B5651D",veh:"#3D5A80",dust:"#C9A227",ind:"#6C757D",waste:"#8E3B46",fire:"#D1495B",home:"#5B8E7D",reg:"#A7B4BA"};
+const PRIOR={sPost:{stub:2.2,veh:1.5,dust:1,ind:1,waste:1,fire:.6,home:.8},sWin:{stub:.5,veh:1.6,dust:.9,ind:1.1,waste:1.2,fire:.25,home:1.4},sSum:{stub:.6,veh:1.3,dust:2.2,ind:1.1,waste:.9,fire:.1,home:.6},sMon:{stub:.2,veh:1.5,dust:.5,ind:1.4,waste:.9,fire:.1,home:.7}};
+const EV={
+ tm:{home:.8,veh:.6},tr:{veh:1.4,dust:.3},ta:{dust:.8,ind:.3},tn:{fire:.6,waste:.7,stub:.5,ind:.5,home:.5},
+ smSmoke:{stub:1.8,home:.9,waste:.5},smDiesel:{veh:2},smChem:{ind:1.8,fire:1.2},smPlastic:{waste:2.2,ind:.4},smDust:{dust:2},smNone:{dust:.4,veh:.3},
+ skBrown:{stub:1,veh:.7,dust:.4},skGrey:{stub:.8,home:.6,ind:.5,fire:.6},skTan:{dust:1.6},skPlume:{waste:1.2,ind:1.2,stub:.6},skClear:{veh:.2},
+ nRoad:{veh:1.6,dust:.6},nCons:{dust:2},nInd:{ind:2.2},nDump:{waste:2.2},nFarm:{stub:1.8},nHomes:{home:1.4,waste:.6},
+ yes:{fire:2.6},no:{fire:-.8},wCalm:{veh:.3,home:.3,waste:.3},wBreeze:{},wStrong:{dust:1,stub:.6}};
+const ACTS={
+ stub:[["Keep windows shut on evenings with smoke.","Use N95 outdoors till the season passes."],["Fund bio-decomposers, Happy Seeders and ex-situ residue buyers.","Satellite fire alerts to block-level teams within hours."]],
+ veh:[["Choose metro/bus; switch off at signals.","Keep PUC valid; report smoky vehicles."],["Strict PUC checks and remote sensing of exhaust.","Bus lanes, parking pricing, EV charging."]],
+ dust:[["Report uncovered construction material.","Wet-wipe floors instead of dry sweeping."],["Mechanised wet sweeping, green cover on bare soil.","Anti-smog guns and covering rules at sites."]],
+ ind:[["Report night-time stack smoke with photo, time, place.","Back clean-fuel (PNG) shift in your area."],["Continuous emission monitoring; penalty for violations.","Move units to PNG; shut unapproved fuels."]],
+ waste:[["Segregate wet/dry waste; never burn leaves.","Report burning to municipal helpline."],["Daily collection, compost leaf litter, fine burning.","Cap and manage landfill fires."]],
+ fire:[["Celebrate with lights, not crackers.","Keep children and elderly indoors that night."],["Enforce green-cracker-only rules and time limits.","Community celebrations instead of street bursting."]],
+ home:[["Use LPG/induction; avoid coal or wood indoors.","Give guards and street vendors an electric heater option."],["Refill subsidies for LPG; clean heating for night workers.","Ban coal tandoors in eateries."]]};
+const ACTSHI={stub:[["धुएँ वाली शामों में खिड़कियाँ बंद रखें।","मौसम बीतने तक बाहर N95 पहनें।"],["बायो-डीकंपोज़र, हैप्पी सीडर और पराली ख़रीद को बढ़ावा।","उपग्रह अलर्ट से घंटों में कार्रवाई।"]],veh:[["मेट्रो/बस चुनें; सिग्नल पर इंजन बंद।","PUC वैध रखें; धुआँ छोड़ते वाहन की शिकायत करें।"],["कड़ी PUC जाँच और रिमोट सेंसिंग।","बस लेन, पार्किंग शुल्क, ईवी चार्जिंग।"]],dust:[["खुले निर्माण मलबे की शिकायत करें।","सूखी झाड़ू की जगह गीला पोछा।"],["मशीनी गीली सफ़ाई, खुली मिट्टी पर हरियाली।","निर्माण स्थलों पर एंटी-स्मॉग गन।"]],ind:[["रात में चिमनी के धुएँ की फ़ोटो सहित शिकायत।","क्षेत्र में PNG का समर्थन करें।"],["निरंतर उत्सर्जन निगरानी; उल्लंघन पर दंड।","इकाइयों को PNG पर लाएँ।"]],waste:[["गीला-सूखा कूड़ा अलग करें; पत्तियाँ न जलाएँ।","जलाने की शिकायत नगर निगम को।"],["रोज़ संग्रह, पत्तियों की खाद, जलाने पर जुर्माना।","लैंडफ़िल आग का प्रबंधन।"]],fire:[["रोशनी से त्योहार मनाएँ, पटाख़ों से नहीं।","उस रात बच्चों-बुज़ुर्गों को अंदर रखें।"],["केवल ग्रीन पटाख़े और समय सीमा लागू करें।","सामुदायिक उत्सव को बढ़ावा।"]],home:[["LPG/इंडक्शन अपनाएँ; घर में कोयला-लकड़ी नहीं।","गार्ड व विक्रेताओं को इलेक्ट्रिक हीटर।"],["LPG रीफ़िल सहायता; रात्रि कर्मियों हेतु स्वच्छ ताप।","भोजनालयों में कोयला तंदूर बंद।"]]};
+function detScores(){
+  const d=S.det,sea=d.season||season(),pr=PRIOR[sea];const sc={},why={};
+  SRC.forEach(s=>{sc[s]=Math.log(pr[s]);why[s]=[]});
+  const keys=[d.time,d.smell,d.sky,...(d.near||[]),d.fest,d.wind].filter(Boolean);
+  keys.forEach(k=>{const e=EV[k]||{};for(const s in e){sc[s]+=e[s]*.5;if(e[s]>=1)why[s].push(t(k))}});
+  if(pr.stub>=2)why.stub.unshift(t(sea));if(pr.dust>=2)why.dust.unshift(t(sea));
+  const mx=Math.max(...SRC.map(s=>sc[s]));let tot=0;SRC.forEach(s=>{sc[s]=Math.exp(sc[s]-mx);tot+=sc[s]});
+  return SRC.map(s=>({s,p:sc[s]/tot,why:why[s]})).sort((a,b)=>b.p-a.p);
+}
+function viewDetect(){
+  const d=S.det;if(!d.season)d.season=season();
+  const Q=(k,g,opts,multi)=>`<div class="q"><h3>${t(k)}</h3>${chips(g,opts,d[g],multi)}</div>`;
+  return `<div class="view"><h1>${t("detH")}</h1><p class="sub">${t("detS")}</p>
+  <section class="panel">
+   ${Q("qSeason","season",["sPost","sWin","sSum","sMon"])}
+   ${Q("qTime","time",["tm","tr","ta","tn"])}
+   ${Q("qSmell","smell",["smSmoke","smDiesel","smChem","smPlastic","smDust","smNone"])}
+   ${Q("qSky","sky",["skBrown","skGrey","skTan","skPlume","skClear"])}
+   ${Q("qNear","near",["nRoad","nCons","nInd","nDump","nFarm","nHomes"],true)}
+   ${Q("qFest","fest",["yes","no"])}
+   ${Q("qWind","wind",["wCalm","wBreeze","wStrong"])}
+  </section>
+  <section class="panel" id="detRes">${detResult()}</section>
+  <section class="panel"><h2>${t("report")}</h2><p class="muted" style="margin-bottom:10px">${t("reportS")}</p>
+   <input type="text" id="locIn" placeholder="${t("loc")}" value="${esc(d.loc||"")}" style="margin-bottom:8px">
+   <textarea id="cmp" aria-label="Complaint text">${esc(complaint())}</textarea>
+   <div class="row" style="margin-top:10px"><button class="btn" id="copyC">${t("copy")}</button><button class="btn ghost" id="saveC">${t("save")}</button></div>
+   <div id="savedList" style="margin-top:10px">${savedHtml()}</div>
+  </section></div>`;
+}
+function detResult(){
+  const res=detScores(),top=res[0];const hi=S.lang==="hi";const A=(hi?ACTSHI:ACTS)[top.s];
+  return `<h2>${t("likely")}</h2>${res.slice(0,4).map((x,i)=>`<div class="bar"><span class="name">${t(SRCK[x.s])}</span><span class="pct">${Math.round(x.p*100)}%</span><span class="tr"><i style="width:${(x.p*100).toFixed(1)}%;background:${SRCC[x.s]}"></i></span>${i<2&&x.why.length?`<span class="why">${t("whyT")}: ${x.why.map(esc).join(", ")}</span>`:""}</div>`).join("")}
+  <div class="split" style="margin-top:12px"><div><h4>${t("youDo")}</h4><ul>${A[0].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>${t("authDo")}</h4><ul>${A[1].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>`;
+}
+function complaint(){
+  const d=S.det,top=detScores()[0],r=reading(),now=new Date();
+  const obs=[d.smell&&T.en[d.smell],d.sky&&T.en[d.sky],...(d.near||[]).map(n=>T.en[n])].filter(Boolean).join("; ");
+  return `To: Pollution Control Committee / Municipal Corporation
+Subject: Air pollution complaint – suspected ${T.en[SRCK[top.s]].toLowerCase()}
+
+Location: ${d.loc||"[add location / landmark]"}
+Date & time: ${now.toLocaleDateString("en-IN")} ${now.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}
+Observations: ${obs||"[describe smell, smoke, dust]"}
+Air quality at the time: AQI ${r.aqi} (${T.en["cat"+r.cat]}), PM2.5 ≈ ${Math.round(r.pm)} µg/m³
+Likely source (SAANS analysis): ${T.en[SRCK[top.s]]} – ${Math.round(top.p*100)}% confidence
+
+I request an inspection and action under the Air (Prevention and Control of Pollution) Act, 1981 and the applicable GRAP stage.
+
+– Prepared offline with SAANS`;
+}
+function savedHtml(){if(!S.reports.length)return"";return `<h4 style="font-size:13px;margin-bottom:4px">${t("savedT")} (${S.reports.length})</h4>`+S.reports.slice(-3).reverse().map(x=>`<div class="saved">${esc(x.when)} – ${esc(x.src)}${x.loc?" @ "+esc(x.loc):""}</div>`).join("")}
+
+/* ================= CONTROL ================= */
+const MIX={sPost:{veh:19,stub:26,dust:15,ind:14,waste:8,home:10,reg:8},sWin:{veh:23,stub:8,dust:15,ind:17,waste:10,home:15,reg:12},sSum:{veh:18,stub:6,dust:36,ind:17,waste:7,home:6,reg:10},sMon:{veh:26,stub:2,dust:14,ind:24,waste:8,home:10,reg:16}};
+const EFF={veh:.6,stub:.9,dust:.55,ind:.6,waste:.9,home:.8};
+const LV={veh:"lvVeh",stub:"lvStub",dust:"lvDust",ind:"lvInd",waste:"lvWaste",home:"lvHome"};
+const SK2={veh:"srcVeh",stub:"srcStub",dust:"srcDust",ind:"srcInd",waste:"srcWaste",home:"srcHome",reg:"srcReg"};
+const PRESET={prGrap:{veh:40,stub:30,dust:70,ind:50,waste:70,home:20},prCit:{veh:30,stub:0,dust:20,ind:0,waste:60,home:30},prMax:{veh:90,stub:90,dust:90,ind:90,waste:90,home:90},prReset:{veh:0,stub:0,dust:0,ind:0,waste:0,home:0}};
+function sim(){const r=reading(),mix=MIX[season()];let cut=0;const after={};
+  for(const k in mix){const red=EFF[k]?mix[k]*EFF[k]*(S.levers[k]||0)/100:0;after[k]=mix[k]-red;cut+=red}
+  const pm2=r.pm*(1-cut/100);let best=null,bv=0;for(const k in EFF){const v=mix[k]*EFF[k];if(v>bv){bv=v;best=k}}
+  return{r,mix,after,pm2,aqi2:subIndex("pm25",pm2),best,bv}}
+function viewControl(){
+  return `<div class="view"><h1>${t("conH")}</h1><p class="sub">${t("conS")}</p>
+  <section class="panel" id="simTop">${simTop()}</section>
+  <section class="panel"><div class="chips" style="margin-bottom:6px">${Object.keys(PRESET).map(p=>`<button class="chip" data-preset="${p}" aria-pressed="false">${t(p)}</button>`).join("")}</div>
+  ${Object.keys(LV).map(k=>`<div class="lever"><div class="row"><b>${t(LV[k])}</b><span class="v" id="lv_${k}">${S.levers[k]}%</span></div><input type="range" min="0" max="100" step="5" value="${S.levers[k]}" data-lever="${k}" aria-label="${t(LV[k])}"></div>`).join("")}
+  </section></div>`;
+}
+function simTop(){const s=sim(),c1=catOf(s.r.aqi),c2=catOf(s.aqi2);
+  const bar=o=>`<div class="stack">${Object.keys(s.mix).map(k=>`<i style="width:${o[k]}%;background:${SRCC[k]}" title="${t(SK2[k])}"></i>`).join("")}</div>`;
+  const risk=Math.max(0,(s.r.pm-s.pm2)/22);
+  return `<div class="cmp"><div><div class="tiny">${t("now")}</div><div class="n">${s.r.aqi}</div><span class="c" style="background:${CATC[c1]}">${t("cat"+c1)}</span></div><div class="arrow" aria-hidden="true">➜</div><div><div class="tiny">${t("after")}</div><div class="n" style="color:${CATC[c2]}">${s.aqi2}</div><span class="c" style="background:${CATC[c2]}">${t("cat"+c2)}</span></div></div>
+  <h2 style="font-size:14px;margin-top:4px">${t("srcMix")}</h2>${bar(s.mix)}${bar(s.after)}
+  <div class="legend">${Object.keys(s.mix).map(k=>`<span style="--k:${SRCC[k]}">${t(SK2[k])}</span>`).join("")}</div>
+  <div class="insight" style="margin:12px 0 0"><b>${t("bestLever")}</b> ${t(LV[s.best])} (−${Math.round(s.bv)}% PM2.5)<br><b>${t("health")}</b> ${risk.toFixed(1)} ${t("healthTail")}</div>
+  <p class="tiny" style="margin-top:8px">${t("mixNote")} PM2.5: ${Math.round(s.r.pm)} → ${Math.round(s.pm2)} µg/m³</p>`}
+
+/* ================= PLAN ================= */
+const DIUR={win:[1.25,1.3,1.32,1.3,1.28,1.3,1.35,1.42,1.38,1.2,1,.84,.72,.65,.62,.64,.72,.88,1.05,1.18,1.25,1.3,1.3,1.28],sum:[1.08,1.1,1.1,1.1,1.1,1.12,1.18,1.2,1.12,1,.92,.86,.82,.8,.8,.82,.86,.94,1.02,1.08,1.1,1.1,1.1,1.08]};
+function diur(){const s=season();const a=(s==="sPost"||s==="sWin")?DIUR.win:DIUR.sum;const m=a.reduce((x,y)=>x+y)/24;return a.map(v=>v/m)}
+const RATE={aSleep:.3,aSit:.5,aWalk:1.1,aCycle:1.8,aRun:3};
+const WHERE={wOut:1,wOpen:.85,wClosed:.55,wPur:.22,wCar:.4};
+const MASK={mkNone:0,mkCloth:.25,mkSurg:.45,mkN95:.9};
+const DEFDAY=[{h:7,d:1,a:"aRun",w:"wOut",m:"mkNone"},{h:9,d:7,a:"aSit",w:"wClosed",m:"mkNone"},{h:18,d:1,a:"aWalk",w:"wOut",m:"mkNone"},{h:22,d:8,a:"aSleep",w:"wClosed",m:"mkNone"}];
+function bestWindow(){const f=diur();let b=6,bv=1e9,w=6,wv=-1;for(let h=6;h<=20;h++){const v=f[h]+f[h+1];if(v<bv){bv=v;b=h}if(v>wv){wv=v;w=h}}return{b,w,f}}
+function doseOf(row,pm,f,hStart){let s=0;const h0=hStart??row.h;for(let i=0;i<row.d;i+=.5){const hh=Math.floor(h0+i)%24;s+=pm*f[hh]*.5}return s*WHERE[row.w]*RATE[row.a]*(1-MASK[row.m])}
+const hh=h=>String(h%24).padStart(2,"0")+":00";
+function viewPlan(){if(!S.day)S.day=JSON.parse(JSON.stringify(DEFDAY));
+  return `<div class="view"><h1>${t("planH")}</h1><p class="sub">${t("planS")}</p>
+  <section class="panel" id="curve">${curveHtml()}</section>
+  <section class="panel"><h2>${t("myDay")}</h2><div id="rows">${rowsHtml()}</div><button class="btn ghost" id="addRow" style="width:100%">${t("add")}</button><div id="doseBox" style="margin-top:12px">${doseHtml()}</div></section>
+  <section class="panel"><h2>${t("purH")}</h2><p class="tiny" style="margin-bottom:6px">${t("room")}</p><div class="row">${S.room.map((v,i)=>`<input type="number" min="1" max="30" step="0.5" value="${v}" data-room="${i}" aria-label="room dimension ${i+1}">`).join("")}</div><div id="cadr" style="margin-top:10px">${cadrHtml()}</div></section></div>`}
+function curveHtml(){const{b,w,f}=bestWindow(),pm=reading().pm,W=320,H=120,mx=Math.max(...f)*1.08;
+  const X=h=>h/23*W,Y=v=>H-v/mx*H;let p=`M0,${Y(f[0])}`;f.forEach((v,h)=>{p+=` L${X(h)},${Y(v)}`});
+  const ticks=[0,6,12,18,23].map(h=>`<text x="${X(h)}" y="${H+14}" font-size="10" fill="#46606B" text-anchor="${h===0?"start":h===23?"end":"middle"}">${hh(h)}</text>`).join("");
+  return `<svg class="chart" viewBox="0 -6 320 140" role="img" aria-label="PM2.5 through the day"><path d="${p} L${W},${H} L0,${H}Z" fill="#15262E" opacity=".07"/><rect x="${X(b)}" y="0" width="${X(2)}" height="${H}" fill="#1F7A5C" opacity=".28" rx="6"/><rect x="${X(w)}" y="0" width="${X(2)}" height="${H}" fill="#D9452B" opacity=".22" rx="6"/><path d="${p}" fill="none" stroke="#15262E" stroke-width="2.2"/>${ticks}</svg>
+  <div class="row" style="margin-top:8px"><div class="grow"><div class="tiny">${t("bestWin")}</div><b style="color:var(--leaf);font-size:18px">${hh(b)}–${hh(b+2)}</b> <span class="tiny">≈${Math.round(pm*f[b])} µg/m³</span></div><div class="grow"><div class="tiny">${t("worstWin")}</div><b style="color:var(--c4);font-size:18px">${hh(w)}–${hh(w+2)}</b> <span class="tiny">≈${Math.round(pm*f[w])} µg/m³</span></div></div>`}
+function opt(map,cur){return Object.keys(map).map(k=>`<option value="${k}" ${k===cur?"selected":""}>${esc(t(k))}</option>`).join("")}
+function rowsHtml(){return S.day.map((r,i)=>`<div class="dayrow"><select data-row="${i}" data-k="h" aria-label="start">${Array.from({length:24},(_,h)=>`<option value="${h}" ${h===r.h?"selected":""}>${hh(h)}</option>`).join("")}</select><select data-row="${i}" data-k="a">${opt(RATE,r.a)}</select><select data-row="${i}" data-k="d" aria-label="hours">${[.5,1,2,3,4,6,7,8,9,10].map(v=>`<option value="${v}" ${v==r.d?"selected":""}>${v} h</option>`).join("")}</select><div class="full"><select data-row="${i}" data-k="w">${opt(WHERE,r.w)}</select><select data-row="${i}" data-k="m">${opt(MASK,r.m)}</select><button class="x" data-del="${i}" aria-label="remove">×</button></div></div>`).join("")}
+function doseHtml(){const pm=reading().pm,{b,f}=bestWindow();let tot=0,tip=null,ts=0;
+  S.day.forEach(r=>{const d=doseOf(r,pm,f);tot+=d;if(r.w==="wOut"&&r.d<=3){const alt=doseOf(r,pm,f,b);if(d-alt>ts){ts=d-alt;tip=r}}});
+  const clean=15*13.5;const x=tot/clean;
+  return `<div class="dose"><b>${Math.round(tot).toLocaleString("en-IN")}</b><span class="muted">${t("doseL")}</span></div><div class="muted">${x.toFixed(1)} ${t("vsClean")} (15 µg/m³ × 13.5 m³)</div>${tip&&ts/tot>.03?`<div class="insight" style="margin-top:10px"><b>${t("tipMove")}</b> ${esc(t(tip.a))} ${hh(tip.h)} ${t("tipTo")} ${hh(b)} ${t("tipSave")} ${Math.round(ts/tot*100)}%</div>`:""}`}
+function cadrHtml(){const v=S.room.reduce((a,b)=>a*b,1),c=v*5;return `<div class="dose"><b>${Math.round(c)}</b><span class="muted">m³/h (${Math.round(c/1.699)} CFM)</span></div><div class="muted">${t("cadr")} · ${v.toFixed(1)} m³</div>`}
+
+/* ================= ACT ================= */
+const ACTL=[["a1",15,2],["a2",5,.1],["a3",10,.5],["a4",20,0],["a5",10,1],["a6",5,.3],["a7",15,0],["a8",10,0]];
+const MYTHS=[["Indoor plants clean polluted air.","You'd need hundreds of plants per room to match a small purifier. Plants are lovely – not air cleaners."],["A morning walk gives the freshest air in winter.","In winter, an inversion traps smoke near the ground until ~10 am. Afternoons are usually cleaner."],["Cloth masks stop PM2.5.","Loose cloth masks filter only a small share of fine particles. A well-fitted N95 blocks about 95%."],["Smog towers can clean a city.","A tower cleans only a small zone around it. Cutting emissions at the source works far better."],["Closing windows keeps all smoke out.","Fine particles leak in. Closed rooms run at roughly half the outdoor level; a purifier is needed for more."],["Air pollution only hurts the lungs.","PM2.5 enters the bloodstream; it raises risk of heart attack, stroke, diabetes and low birth weight."]];
+const MYTHSHI=[["घर के पौधे प्रदूषित हवा साफ़ करते हैं।","एक छोटे प्यूरीफ़ायर जितना असर पाने के लिए सैकड़ों पौधे चाहिए। पौधे सुंदर हैं, एयर क्लीनर नहीं।"],["सर्दियों में सुबह की सैर सबसे साफ़ हवा देती है।","सर्दियों में इन्वर्ज़न सुबह ~10 बजे तक धुआँ ज़मीन के पास रोकता है। दोपहर अक्सर साफ़ होती है।"],["कपड़े का मास्क PM2.5 रोकता है।","ढीला कपड़े का मास्क बारीक कण कम रोकता है। सही फ़िट N95 लगभग 95% रोकता है।"],["स्मॉग टावर पूरा शहर साफ़ कर सकते हैं।","टावर केवल आसपास का छोटा क्षेत्र साफ़ करता है। स्रोत पर उत्सर्जन घटाना कहीं बेहतर है।"],["खिड़कियाँ बंद करने से धुआँ नहीं आता।","बारीक कण अंदर आ जाते हैं। बंद कमरे में बाहर का लगभग आधा स्तर रहता है।"],["वायु प्रदूषण केवल फेफड़ों को नुकसान करता है।","PM2.5 ख़ून में पहुँचता है; हृदयाघात, स्ट्रोक, मधुमेह और कम जन्म-भार का जोखिम बढ़ाता है।"]];
+const today=()=>new Date().toISOString().slice(0,10);
+function actStats(){const days=Object.keys(S.hist).sort();let pts=0,co2=0;days.forEach(d=>(S.hist[d]||[]).forEach(k=>{const a=ACTL.find(x=>x[0]===k);if(a){pts+=a[1];co2+=a[2]}}));
+  let st=0;const dt=new Date();for(;;){const k=dt.toISOString().slice(0,10);if((S.hist[k]||[]).length){st++;dt.setDate(dt.getDate()-1)}else break}
+  const rep=Object.values(S.hist).some(v=>v.includes("a4"));return{pts,co2,st,rep}}
+function viewAct(){const done=S.hist[today()]||[],s=actStats(),hi=S.lang==="hi";const M=hi?MYTHSHI:MYTHS;
+  const b=[["b1",s.pts>0],["b2",s.st>=7],["b3",s.rep],["b4",s.pts>=100]];
+  return `<div class="view"><h1>${t("actH")}</h1><p class="sub">${t("actS")}</p>
+  <div class="score"><div><b>${s.pts}</b><span>${t("pts")}</span></div><div style="background:var(--leaf)"><b>${s.st}</b><span>${t("streak")}</span></div><div style="background:#fff;color:var(--ink)"><b>${s.co2.toFixed(1)}</b><span>${t("co2")}</span></div></div>
+  <section class="panel">${ACTL.map(([k,p])=>`<div class="act" role="checkbox" tabindex="0" data-act="${k}" aria-checked="${done.includes(k)}"><span class="tick"></span><div class="grow"><div class="t">${t(k)}</div><div class="s">${t(k+"s")}</div></div><b class="tiny">+${p}</b></div>`).join("")}</section>
+  <section class="panel"><h2>${t("badgesT")}</h2><div class="badges">${b.map(([k,on])=>`<span class="badge ${on?"on":""}">${on?"★ ":""}${t(k)}</span>`).join("")}</div></section>
+  <h2 style="margin:16px 4px 10px">${t("mythsT")}</h2>
+  ${M.map((m,i)=>`<div class="myth ${S.myths[i]?"flip":""}" data-myth="${i}" role="button" tabindex="0" aria-label="${esc(m[0])}"><div class="in"><div class="f"><small>${t("myth")}?</small><b>${esc(m[0])}</b></div><div class="b"><small>${t("fact")}</small>${esc(m[1])}</div></div></div>`).join("")}
+  </div>`}
+
+/* ---------- router & events ---------- */
+const VIEWS={air:viewAir,detect:viewDetect,control:viewControl,plan:viewPlan,act:viewAct};
+function render(){renderTabs();document.documentElement.lang=S.lang==="hi"?"hi":"en";$("#lang").textContent=S.lang==="hi"?"EN":"हिं";
+  $("#view").innerHTML=VIEWS[S.tab]();applyMood(reading());if(S.tab==="air"){orb.target=reading();if(!orb.raf)orb.raf=requestAnimationFrame(orbLoop)}net();save()}
+function go(tab){S.tab=tab;try{history.replaceState(null,"","#"+tab)}catch(e){}render();window.scrollTo({top:0})}
+function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1800)}
+function net(){$("#net").textContent=navigator.onLine?t("online"):t("offline")}
+addEventListener("online",net);addEventListener("offline",net);
+$("#lang").onclick=()=>{S.lang=S.lang==="hi"?"en":"hi";render()};
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-tab],[data-mode],[data-g],[data-preset],[data-act],[data-myth],[data-del],#addRow,#copyC,#saveC");if(!el)return;
+  if(el.dataset.tab)return go(el.dataset.tab);
+  if(el.dataset.mode){S.mode=el.dataset.mode;return render()}
+  if(el.dataset.g){const g=el.dataset.g,v=el.dataset.v;
+    if(g==="profile"){S.profile=v;save();document.querySelectorAll('[data-g="profile"]').forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));return updAir()}
+    if(g==="rh"){S.rh=v;save();document.querySelectorAll('[data-g="rh"]').forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));return updAir()}
+    if(g==="near"){const a=S.det.near||[];S.det.near=a.includes(v)?a.filter(x=>x!==v):[...a,v]}else S.det[g]=S.det[g]===v&&g!=="season"?null:v;
+    document.querySelectorAll(`[data-g="${g}"]`).forEach(b=>b.setAttribute("aria-pressed",g==="near"?S.det.near.includes(b.dataset.v):b.dataset.v===S.det[g]));
+    $("#detRes").innerHTML=detResult();$("#cmp").value=complaint();return save()}
+  if(el.dataset.preset){Object.assign(S.levers,PRESET[el.dataset.preset]);return render()}
+  if(el.dataset.act)return toggleAct(el);
+  if(el.dataset.myth!=null){el.classList.toggle("flip");S.myths[el.dataset.myth]=el.classList.contains("flip");return save()}
+  if(el.dataset.del!=null){S.day.splice(+el.dataset.del,1);$("#rows").innerHTML=rowsHtml();$("#doseBox").innerHTML=doseHtml();return save()}
+  if(el.id==="addRow"){S.day.push({h:16,d:1,a:"aWalk",w:"wOut",m:"mkNone"});$("#rows").innerHTML=rowsHtml();$("#doseBox").innerHTML=doseHtml();return save()}
+  if(el.id==="copyC"){const v=$("#cmp").value;try{navigator.clipboard.writeText(v).then(()=>toast(t("copied")),()=>{$("#cmp").select();toast(t("copyFail"))})}catch(x){$("#cmp").select();toast(t("copyFail"))}return}
+  if(el.id==="saveC"){const top=detScores()[0];S.reports.push({when:new Date().toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}),src:T.en[SRCK[top.s]],loc:S.det.loc||"",text:$("#cmp").value});save();$("#savedList").innerHTML=savedHtml();return toast(t("savedOk"))}
+});
+function toggleAct(el){const k=el.dataset.act,d=today(),a=S.hist[d]||[];S.hist[d]=a.includes(k)?a.filter(x=>x!==k):[...a,k];save();render();const n=document.querySelector(`[data-act="${k}"]`);if(n)n.focus()}
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-act],[data-myth]")){e.preventDefault();e.target.click()}});
+document.addEventListener("input",e=>{const el=e.target;
+  if(el.id==="dial"||el.id==="dialN"){S.aqi=clamp(parseInt(el.value)||0,0,500);const o=el.id==="dial"?$("#dialN"):$("#dial");o.value=S.aqi;updAir();return save()}
+  if(el.dataset.pol){S.meter[el.dataset.pol]=el.value;updAir();return save()}
+  if(el.id==="visR"){S.vis=+(0.2*Math.pow(250,el.value/100)).toFixed(2);$("#visV").textContent=(S.vis<1?S.vis.toFixed(1):Math.round(S.vis))+" km";const sc=document.querySelector(".scene");sc.outerHTML=scene(S.vis);updAir();return save()}
+  if(el.dataset.lever){S.levers[el.dataset.lever]=+el.value;$("#lv_"+el.dataset.lever).textContent=el.value+"%";$("#simTop").innerHTML=simTop();return save()}
+  if(el.dataset.row!=null){const r=S.day[+el.dataset.row],k=el.dataset.k;r[k]=(k==="h"||k==="d")?+el.value:el.value;$("#doseBox").innerHTML=doseHtml();return save()}
+  if(el.dataset.room!=null){S.room[+el.dataset.room]=clamp(+el.value||1,1,30);$("#cadr").innerHTML=cadrHtml();return save()}
+  if(el.id==="locIn"){S.det.loc=el.value;$("#cmp").value=complaint();return save()}
+});
+const h0=(location.hash||"").slice(1);if(VIEWS[h0])S.tab=h0;
+addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(VIEWS[h]&&h!==S.tab)go(h)});
+render();
+
+</script>
+</body>
+</html>

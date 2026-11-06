@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1C3A44">
+<meta name="description" content="SAANS – an offline air-pollution control app for India. Official AQI, sky-eye estimator, source detective, city control lab and exposure planner in 74 KB.">
+<title>SAANS – Every breath, decoded. Even offline.</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231C3A44'/%3E%3Cpath d='M14 26c8-8 20 8 36-2M14 38c10-8 22 8 36-2' stroke='%237FE0C2' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{--ink:#15262E;--ink2:#46606B;--mist:#E6EEF0;--leaf:#1F7A5C;--leaf2:#DDF2EA;--mint:#7FE0C2;--red:#D9452B;--line:#D3DEE2;
+ --font:"Segoe UI Variable Text","Avenir Next","Inter",Roboto,"Noto Sans","Noto Sans Devanagari","Nirmala UI",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--ink);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;background:#EEF4F2}
+#sky{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#8EC3DA 0%,#CFE5EC 50%,#EEF4F2 100%)}
+#haze{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#9C8F7C 0%,#BDB3A0 55%,#D4CCBC 100%);opacity:0;transition:opacity 1.2s}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+:focus-visible{outline:3px solid #2B7FFF;outline-offset:3px;border-radius:6px}
+/* nav */
+nav.top{position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(238,244,242,.55);border-bottom:1px solid rgba(255,255,255,.5)}
+nav.top .wrap{display:flex;align-items:center;gap:28px;height:66px}
+nav.top .btn{margin-left:auto}.links+.btn{margin-left:0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:23px;letter-spacing:-.6px;text-decoration:none}
+.brand svg{width:32px;height:32px}
+.links{display:flex;gap:22px;margin-left:auto;font-size:15px;font-weight:600}
+.links a{text-decoration:none;color:var(--ink2)}
+.links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:14px;padding:12px 20px;font:inherit;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;background:var(--ink);color:#fff}
+.btn.sm{padding:9px 15px;font-size:14px;border-radius:12px}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+/* hero */
+.hero{display:grid;grid-template-columns:1fr 400px;gap:56px;align-items:center;padding:30px 0 60px}
+.hero h1{font-size:clamp(42px,5.6vw,72px);line-height:1.02;letter-spacing:-2.6px;font-weight:800}
+.hero .lead{font-size:20px;color:#2E4A55;margin:22px 0 28px;max-width:560px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.facts{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.facts span{font-size:14px;font-weight:650;background:rgba(255,255,255,.7);border-radius:999px;padding:7px 14px}
+.phone{width:380px;height:764px;border-radius:58px;background:var(--ink);padding:12px;box-shadow:0 40px 80px rgba(21,38,46,.32);margin-left:auto;position:relative}
+.phone .scr{width:100%;height:100%;border-radius:46px;overflow:hidden;background:#C9DCE3}
+.phone iframe{width:412px;height:856px;border:0;transform:scale(.8641);transform-origin:0 0;display:block}
+.hint{position:absolute;left:-210px;top:150px;width:180px;font-size:14px;color:var(--ink2);line-height:1.35}
+.hint svg{display:block;margin:6px 0 0 120px}
+/* stats */
+.stats{background:var(--ink);color:#fff;border-radius:30px;padding:38px 42px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-bottom:96px}
+.stats b{display:block;font-size:52px;letter-spacing:-2px;line-height:1;color:var(--mint)}
+.stats p{margin-top:10px;font-size:16px;color:#D5E1E5}
+.stats small{display:block;margin-top:6px;font-size:13px;color:#8FA6AE}
+/* sections */
+section{scroll-margin-top:80px}
+.sh{max-width:720px;margin-bottom:44px}
+.sh h2{font-size:clamp(32px,3.8vw,46px);line-height:1.08;letter-spacing:-1.5px}
+.sh p{font-size:19px;color:#33505B;margin-top:14px}
+.tool{display:grid;grid-template-columns:300px 1fr;gap:64px;align-items:center;margin-bottom:84px}
+.tool.flip{grid-template-columns:1fr 300px}
+.tool.flip .shot{order:2}
+.shot img{width:300px;display:block;border-radius:40px;border:10px solid var(--ink);box-shadow:0 26px 50px rgba(21,38,46,.22)}
+.tool .name{font-weight:800;color:var(--leaf);font-size:16px;margin-bottom:8px}
+.tool h3{font-size:36px;letter-spacing:-1.2px;line-height:1.1;margin-bottom:14px}
+.tool p{font-size:18px;color:#33505B;max-width:560px}
+.tool ul{margin-top:16px;padding-left:20px;color:#33505B;max-width:560px}
+.tool li{margin-bottom:6px}
+.scen{margin-top:22px;max-width:520px;background:rgba(255,255,255,.75);border-radius:20px;padding:18px 20px}
+.scen .r{display:grid;grid-template-columns:150px 1fr 44px;align-items:center;gap:10px;font-size:14px;margin:7px 0}
+.scen i{display:block;height:14px;border-radius:7px}
+.scen b{text-align:right;font-variant-numeric:tabular-nums}
+/* science */
+.sci{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 40px;margin-bottom:96px}
+.sci div{border-top:2px solid var(--ink);padding-top:14px}
+.sci h4{font-size:19px;margin-bottom:6px}
+.sci p{font-size:16px;color:#33505B}
+code{font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-size:14px;background:rgba(255,255,255,.75);padding:1px 6px;border-radius:6px}
+/* built for india */
+.india{background:rgba(255,255,255,.72);border-radius:32px;padding:48px;margin-bottom:96px;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:start}
+.india h2{font-size:40px;letter-spacing:-1.4px;line-height:1.1}
+.india .big{font-size:120px;font-weight:800;letter-spacing:-6px;line-height:1;color:var(--leaf);margin-top:22px}
+.india .big small{font-size:28px;letter-spacing:-.5px;color:var(--ink2);font-weight:700}
+.feat{display:grid;gap:20px}
+.feat h4{font-size:18px}
+.feat p{font-size:16px;color:#33505B}
+/* who + roadmap */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:96px}
+.panel{border-radius:28px;padding:34px}
+.panel h3{font-size:26px;letter-spacing:-.6px;margin-bottom:14px}
+.panel ul{padding-left:20px}.panel li{margin-bottom:9px}
+.p1{background:var(--leaf2)}.p2{background:var(--ink);color:#E6EEF0}.p2 h3{color:var(--mint)}
+/* final cta */
+.final{text-align:center;padding:30px 0 90px}
+.final h2{font-size:clamp(36px,4.6vw,60px);letter-spacing:-2px;line-height:1.05}
+.final p{font-size:19px;color:#33505B;margin:16px auto 26px;max-width:620px}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+footer{background:var(--ink);color:#B9C9CF;padding:44px 0 50px;font-size:14px}
+footer .cols{display:grid;grid-template-columns:1fr 1.3fr;gap:40px}
+footer h5{color:#fff;font-size:15px;margin-bottom:10px}
+footer ol,footer ul{padding-left:18px}footer li{margin-bottom:5px}
+footer a{color:var(--mint)}
+.fb{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:20px;margin-bottom:12px}
+.fb svg{width:28px;height:28px}
+@media (max-width:980px){
+ .links{display:none}
+ .hero{grid-template-columns:1fr;gap:36px;padding-top:36px}
+ .phone{margin:0 auto}.hint{display:none}
+ .stats{grid-template-columns:1fr;padding:30px}
+ .tool,.tool.flip{grid-template-columns:1fr;gap:28px}
+ .tool.flip .shot{order:0}.shot img{margin:0 auto;width:260px}
+ .sci,.india,.two,footer .cols{grid-template-columns:1fr}
+ .india{padding:30px}
+}
+@media (max-width:460px){
+ .wrap{padding:0 18px}
+ .phone{width:100%;height:auto;border-radius:0;background:none;padding:0;box-shadow:none}
+ .phone .scr{border-radius:24px;height:760px;box-shadow:0 20px 40px rgba(21,38,46,.25)}
+ .phone iframe{width:100%;height:100%;transform:none}
+ .india .big{font-size:84px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#haze{transition:none}}
+</style>
+</head>
+<body>
+<div id="sky"></div><div id="haze"></div>
+
+<nav class="top"><div class="wrap">
+ <a class="brand" href="#top" aria-label="SAANS home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#1C3A44"/><path d="M13 27c9-8 21 8 38-2M13 39c11-8 23 8 38-2" stroke="#7FE0C2" stroke-width="5" fill="none" stroke-linecap="round"/></svg>saans</a>
+ <div class="links"><a href="#tools">Tools</a><a href="#science">How it works</a><a href="#offline">Offline</a><a href="#impact">Impact</a></div>
+ <a class="btn sm" href="app.html">Open the app</a>
+</div></nav>
+
+<main class="wrap" id="top">
+ <header class="hero">
+  <div>
+   <h1>Every breath, decoded. Even offline.</h1>
+   <p class="lead">SAANS (Hindi for <i>breath</i>) is a 74 KB air-pollution control app for India. It turns any reading, or simply what you can see, into the official AQI. It also finds the likely source and shows what you and your city can do about it.</p>
+   <div class="cta"><a class="btn" href="app.html">Open the full app</a><a class="btn ghost" href="#tools">See the six tools</a></div>
+   <div class="facts"><span>74 KB</span><span>No internet needed</span><span>No sensor needed</span><span>English + हिंदी</span><span>No login, no tracking</span></div>
+  </div>
+  <div class="phone">
+   <p class="hint">This is the live app. Drag the AQI dial and watch this page's sky change.<svg width="60" height="40" viewBox="0 0 60 40" fill="none" stroke="#46606B" stroke-width="2" stroke-linecap="round"><path d="M4 6c18 0 38 6 48 26"/><path d="m44 28 8 5 2-9"/></svg></p>
+   <div class="scr"><iframe id="app" src="app.html#air" title="SAANS app – live"></iframe></div>
+  </div>
+ </header>
+
+ <div class="stats" aria-label="Why it matters">
+  <div><b>2.1 million</b><p>deaths in India linked to air pollution in 2021</p><small>State of Global Air 2024</small></div>
+  <div><b>464 a day</b><p>children under five in India lost to polluted air in 2021</p><small>State of Global Air 2024</small></div>
+  <div><b>89 of 96</b><p>NCAP cities still above the national PM10 standard in 2025-26</p><small>CREA, April 2026</small></div>
+ </div>
+
+ <section id="tools">
+  <div class="sh"><h2>Six tools, one tiny app</h2><p>Each tool answers a question people actually ask on a smoggy day, and every one of them works on airplane mode.</p></div>
+
+  <div class="tool"><div class="shot"><img src="img/air.jpg" alt="Air tab showing AQI 312, Very poor, with cigarette equivalent and GRAP stage"></div>
+   <div><div class="name">Air</div><h3>Your air, decoded</h3><p>Enter an AQI you saw anywhere, or raw pollutant readings. SAANS computes the official CPCB National AQI and names the dominant pollutant. It then turns the number into what to do now.</p>
+   <ul><li>Seven pollutants: PM2.5, PM10, NO₂, O₃, CO, SO₂, NH₃</li><li>Advice for children, older adults, people with asthma or heart disease, pregnant women and outdoor workers</li><li>GRAP stage and a cigarettes-per-day equivalent</li></ul></div></div>
+
+  <div class="tool flip"><div class="shot"><img src="img/sky.jpg" alt="Sky-eye estimator with landscape preview and visibility slider"></div>
+   <div><div class="name">Sky-eye</div><h3>No monitor? Use your eyes.</h3><p>Look at the farthest landmark you can see clearly and slide until the landscape matches. An optical model converts visibility and humidity into an estimated PM2.5, so it works in towns with no monitoring station.</p></div></div>
+
+  <div class="tool"><div class="shot"><img src="img/detect.jpg" alt="Detect tab ranking crop and biomass fires at 80% with evidence"></div>
+   <div><div class="name">Detect</div><h3>Find the source. File the complaint.</h3><p>Tell SAANS the season, time, smell, haze colour and what's nearby. It scores seven sources, from crop fires to waste burning, and shows the evidence behind each score. Then it drafts a complaint you can copy now or save to send later.</p></div></div>
+
+  <div class="tool flip"><div class="shot"><img src="img/control.jpg" alt="City control lab showing AQI 312 falling to 225 with emergency measures"></div>
+   <div><div class="name">Control</div><h3>A city control lab in your pocket</h3><p>Pull six policy levers (transport, crop residue, dust, industry, waste burning, clean cooking) and watch the AQI and source mix respond live. Here is a "Very poor" day in Oct–Nov:</p>
+   <div class="scen" aria-label="Scenario results">
+    <div class="r"><span>Today</span><i style="width:78%;background:#D9452B"></i><b>312</b></div>
+    <div class="r"><span>Citizen power</span><i style="width:74.75%;background:#EE8424"></i><b>299</b></div>
+    <div class="r"><span>Emergency (GRAP)</span><i style="width:56.25%;background:#E2BC2F"></i><b>225</b></div>
+    <div class="r"><span>Full ambition</span><i style="width:22.5%;background:#1F7A5C"></i><b>90</b></div>
+   </div></div></div>
+
+  <div class="tool"><div class="shot"><img src="img/plan.jpg" alt="Plan tab with daily PM2.5 curve, best window 14:00 to 16:00"></div>
+   <div><div class="name">Plan</div><h3>Same day, much less smoke</h3><p>PM2.5 swings through the day. SAANS marks the cleanest and worst hours, then calculates the PM2.5 you actually inhale across your activities, rooms and masks. It tells you which activity to move, and sizes a purifier for your room.</p></div></div>
+
+  <div class="tool flip"><div class="shot"><img src="img/act.jpg" alt="Act tab with clean-air points, streak and daily pledges"></div>
+   <div><div class="name">Act</div><h3>Small actions, counted</h3><p>Daily clean-air pledges earn points, streaks and badges and add up the CO₂ you avoided. Flip-cards bust six common myths, from indoor plants to smog towers.</p></div></div>
+ </section>
+
+ <section id="science">
+  <div class="sh"><h2>Smart without the cloud</h2><p>Every number comes from published science and runs on the phone itself.</p></div>
+  <div class="sci">
+   <div><h4>AQI engine</h4><p>Piece-wise interpolation over CPCB National AQI breakpoints. The overall AQI is the highest sub-index.</p></div>
+   <div><h4>Sky-eye</h4><p>Koschmieder relation <code>b = 3.912 / V</code>, minus Rayleigh scattering, divided by mass-extinction efficiency × humidity growth. About ±35% accurate, and the app says so.</p></div>
+   <div><h4>Source detective</h4><p>Seasonal priors multiplied by evidence weights, normalised to probabilities. Every result lists the clues that drove it.</p></div>
+   <div><h4>Control lab</h4><p>Seasonal source-apportionment shares × lever adoption × lever efficiency give the new PM2.5, converted back to AQI.</p></div>
+   <div><h4>Exposure planner</h4><p>Dose = PM2.5 × hourly factor × room infiltration × breathing rate × (1 − mask efficiency) × hours, compared with a WHO-guideline day.</p></div>
+   <div><h4>Health framing</h4><p>22 µg/m³ of PM2.5 breathed for 24 hours ≈ 1 cigarette, so exposure is easy to grasp.</p></div>
+  </div>
+ </section>
+
+ <section id="offline" class="india">
+  <div><h2>Built for every Indian phone</h2><div class="big">74<small> KB</small></div><p style="color:#33505B;margin-top:10px">Smaller than a single photo. One self-contained file, with no libraries, fonts or network calls.</p></div>
+  <div class="feat">
+   <div><h4>Offline-first</h4><p>Works on airplane mode and on low-end phones. Once installed, it runs offline for good.</p></div>
+   <div><h4>Private by design</h4><p>No login, no tracking, no permissions. Your records and saved complaints never leave the device.</p></div>
+   <div><h4>Bilingual and inclusive</h4><p>Full English and हिंदी, large type, keyboard-accessible controls and reduced-motion support.</p></div>
+   <div><h4>Air you can feel</h4><p>The whole interface hazes as the AQI rises, and a particle "breath orb" thickens with PM2.5.</p></div>
+  </div>
+ </section>
+
+ <section id="impact" class="two">
+  <div class="panel p1"><h3>Who it serves</h3><ul><li><b>Families:</b> profile-specific protection every day</li><li><b>Schools and colleges:</b> AQI literacy, outdoor-time planning and policy role-play</li><li><b>Pollution boards and municipalities:</b> structured, time-stamped citizen reports with the suspected source</li><li><b>Outdoor workers and the elderly:</b> clear actions for the people most exposed</li></ul></div>
+  <div class="panel p2"><h3>What's next</h3><ul><li>Pair with low-cost Bluetooth PM sensors</li><li>All 22 scheduled languages and voice guidance</li><li>Satellite farm-fire alerts when online, cached for offline</li><li>Ward dashboards for city NCAP cells</li><li>Field validation against monitoring stations in 3 cities</li></ul></div>
+ </section>
+
+ <div class="final">
+  <h2>Breathe smarter today.</h2>
+  <p>Open SAANS, set today's air, and see what you and your city can do about it.</p>
+  <div class="cta"><a class="btn" href="app.html">Open the full app</a><a class="btn ghost" href="#top">Back to top</a></div>
+ </div>
+</main>
+
+<footer><div class="wrap cols">
+ <div><div class="fb"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#1C3A44"/><path d="M13 27c9-8 21 8 38-2M13 39c11-8 23 8 38-2" stroke="#7FE0C2" stroke-width="5" fill="none" stroke-linecap="round"/></svg>saans</div>
+  <p>Every breath, decoded. Even offline.</p>
+  <h5 style="margin-top:20px">Honest limits</h5>
+  <ul><li>Sky-eye and the source detective are estimates, not monitors.</li><li>Source mixes and the daily curve are illustrative, adapted from published patterns.</li><li>Health tips are general guidance, not medical advice.</li></ul></div>
+ <div><h5>Sources</h5><ol>
+  <li>Health Effects Institute and UNICEF, <i>State of Global Air 2024</i>.</li>
+  <li>CREA, <i>NCAP FY 2025-26 progress and March 2026 air quality snapshot</i>; <i>Tracing the Hazy Air 2025</i>.</li>
+  <li>CPCB, <i>National Air Quality Index</i>; CAQM, <i>Graded Response Action Plan</i> for Delhi-NCR.</li>
+  <li>WHO, <i>Global Air Quality Guidelines</i> (2021); Berkeley Earth, PM2.5–cigarette equivalence.</li></ol></div>
+</div></footer>
+
+<script>
+// The website's sky follows the live app's air quality.
+(function(){var f=document.getElementById("app"),h=document.getElementById("haze");
+ setInterval(function(){try{var v=getComputedStyle(f.contentDocument.documentElement).getPropertyValue("--haze");h.style.opacity=(parseFloat(v)||0)*.85}catch(e){}},400)})();
+if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
+</script>
+</body>
+</html>
