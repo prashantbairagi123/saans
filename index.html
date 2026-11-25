@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1C3A44">
-<meta name="description" content="SAANS – an offline air-pollution control app for India. Official AQI, sky-eye estimator, source detective, city control lab and exposure planner in 74 KB.">
+<meta name="description" content="SAANS – an offline air-pollution control app for India. Ask SAANS offline deep search in Hindi and English, official AQI, a go-out verdict, sky-eye estimator, source detective, city control lab and exposure planner in under 150 KB.">
 <title>SAANS – Every breath, decoded. Even offline.</title>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231C3A44'/%3E%3Cpath d='M14 26c8-8 20 8 36-2M14 38c10-8 22 8 36-2' stroke='%237FE0C2' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -48,6 +48,14 @@ nav.top .btn{margin-left:auto}.links+.btn{margin-left:0}
 .stats b{display:block;font-size:52px;letter-spacing:-2px;line-height:1;color:var(--mint)}
 .stats p{margin-top:10px;font-size:16px;color:#D5E1E5}
 .stats small{display:block;margin-top:6px;font-size:13px;color:#8FA6AE}
+.askx{background:linear-gradient(135deg,#15262E,#1F4A55);color:#E6EEF0;border-radius:32px;padding:48px;margin-bottom:96px;display:grid;grid-template-columns:1fr 300px;gap:56px;align-items:center}
+.askx .name{color:var(--mint);font-weight:800;font-size:16px;margin-bottom:10px}
+.askx h2{font-size:clamp(30px,3.6vw,44px);line-height:1.08;letter-spacing:-1.4px;color:#fff}
+.askx p{font-size:18px;color:#C9DADF;margin-top:14px}
+.askx ul{margin-top:16px;padding-left:20px;color:#C9DADF}.askx li{margin-bottom:6px}.askx b{color:#fff}
+.askx .btn{background:var(--mint);color:var(--ink)}
+.askx .shot img{border-color:#0C1A20}
+@media (max-width:980px){.askx{grid-template-columns:1fr;padding:30px;gap:28px}.askx .shot img{margin:0 auto;width:260px}}
 /* sections */
 section{scroll-margin-top:80px}
 .sh{max-width:720px;margin-bottom:44px}
@@ -123,7 +131,7 @@ footer a{color:var(--mint)}
 
 <nav class="top"><div class="wrap">
  <a class="brand" href="#top" aria-label="SAANS home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#1C3A44"/><path d="M13 27c9-8 21 8 38-2M13 39c11-8 23 8 38-2" stroke="#7FE0C2" stroke-width="5" fill="none" stroke-linecap="round"/></svg>saans</a>
- <div class="links"><a href="#tools">Tools</a><a href="#science">How it works</a><a href="#offline">Offline</a><a href="#impact">Impact</a></div>
+ <div class="links"><a href="#ask">Ask SAANS</a><a href="#tools">Tools</a><a href="#science">How it works</a><a href="#offline">Offline</a><a href="#impact">Impact</a></div>
  <a class="btn sm" href="app.html">Open the app</a>
 </div></nav>
 
@@ -131,9 +139,9 @@ footer a{color:var(--mint)}
  <header class="hero">
   <div>
    <h1>Every breath, decoded. Even offline.</h1>
-   <p class="lead">SAANS (Hindi for <i>breath</i>) is a 74 KB air-pollution control app for India. It turns any reading, or simply what you can see, into the official AQI. It also finds the likely source and shows what you and your city can do about it.</p>
-   <div class="cta"><a class="btn" href="app.html">Open the full app</a><a class="btn ghost" href="#tools">See the six tools</a></div>
-   <div class="facts"><span>74 KB</span><span>No internet needed</span><span>No sensor needed</span><span>English + हिंदी</span><span>No login, no tracking</span></div>
+   <p class="lead">SAANS (Hindi for <i>breath</i>) is a 146 KB air-pollution control app for India. Ask it anything in Hindi, English or Hinglish, even on airplane mode. It turns any reading, or simply what you can see, into the official AQI, tells you whether it is safe to go out, finds the likely source and shows what you and your city can do about it.</p>
+   <div class="cta"><a class="btn" href="app.html">Open the full app</a><a class="btn ghost" href="#tools">See the seven tools</a></div>
+   <div class="facts"><span>146 KB</span><span>No internet needed</span><span>No sensor needed</span><span>Ask in हिंदी, English or Hinglish</span><span>Reads answers aloud</span><span>No login, no tracking</span></div>
   </div>
   <div class="phone">
    <p class="hint">This is the live app. Drag the AQI dial and watch this page's sky change.<svg width="60" height="40" viewBox="0 0 60 40" fill="none" stroke="#46606B" stroke-width="2" stroke-linecap="round"><path d="M4 6c18 0 38 6 48 26"/><path d="m44 28 8 5 2-9"/></svg></p>
@@ -147,12 +155,20 @@ footer a{color:var(--mint)}
   <div><b>89 of 96</b><p>NCAP cities still above the national PM10 standard in 2025-26</p><small>CREA, April 2026</small></div>
  </div>
 
+ <section id="ask" class="askx">
+  <div class="tx"><div class="name">New · Ask SAANS</div><h2>Ask anything. Get a worked answer. No internet.</h2>
+   <p>Type or speak a question the way people really ask it: “AQI 320 hai, kya bachcha bahar khel sakta hai?” SAANS reads the numbers, the person and the activity, runs the official formulas and shows every step. Then it adds the best answer from its built-in library, in the language you asked in.</p>
+   <ul><li><b>Hindi, English and Hinglish</b>, with spelling mistakes forgiven</li><li><b>Real calculations:</b> pollutant readings to AQI, visibility to PM2.5, room size to purifier CADR, cleanest hours</li><li><b>Explainable:</b> shows what it understood and how it worked the answer out</li><li><b>Reads answers aloud</b> for people who prefer listening</li><li><b>Private:</b> the whole search runs inside the phone in about a millisecond</li></ul>
+   <div class="cta" style="margin-top:20px"><a class="btn" href="app.html#ask">Try Ask SAANS</a></div></div>
+  <div class="shot"><img src="img/ask.jpg" alt="Ask SAANS answering AQI 320 for a child playing outside: Better to stay in, with the cleaner window and advice"></div>
+ </section>
+
  <section id="tools">
-  <div class="sh"><h2>Six tools, one tiny app</h2><p>Each tool answers a question people actually ask on a smoggy day, and every one of them works on airplane mode.</p></div>
+  <div class="sh"><h2>Seven tools, one tiny app</h2><p>Each tool answers a question people actually ask on a smoggy day, and every one of them works on airplane mode.</p></div>
 
   <div class="tool"><div class="shot"><img src="img/air.jpg" alt="Air tab showing AQI 312, Very poor, with cigarette equivalent and GRAP stage"></div>
    <div><div class="name">Air</div><h3>Your air, decoded</h3><p>Enter an AQI you saw anywhere, or raw pollutant readings. SAANS computes the official CPCB National AQI and names the dominant pollutant. It then turns the number into what to do now.</p>
-   <ul><li>Seven pollutants: PM2.5, PM10, NO₂, O₃, CO, SO₂, NH₃</li><li>Advice for children, older adults, people with asthma or heart disease, pregnant women and outdoor workers</li><li>GRAP stage and a cigarettes-per-day equivalent</li></ul></div></div>
+   <ul><li>Seven pollutants: PM2.5, PM10, NO₂, O₃, CO, SO₂, NH₃</li><li>Advice for children, older adults, people with asthma or heart disease, pregnant women and outdoor workers</li><li>A clear “Can I go out?” verdict for the person and the activity, with a cleaner time window</li><li>GRAP stage, a cigarettes-per-day equivalent, and a Listen button that reads the advice aloud</li></ul></div></div>
 
   <div class="tool flip"><div class="shot"><img src="img/sky.jpg" alt="Sky-eye estimator with landscape preview and visibility slider"></div>
    <div><div class="name">Sky-eye</div><h3>No monitor? Use your eyes.</h3><p>Look at the farthest landmark you can see clearly and slide until the landscape matches. An optical model converts visibility and humidity into an estimated PM2.5, so it works in towns with no monitoring station.</p></div></div>
@@ -184,23 +200,25 @@ footer a{color:var(--mint)}
    <div><h4>Source detective</h4><p>Seasonal priors multiplied by evidence weights, normalised to probabilities. Every result lists the clues that drove it.</p></div>
    <div><h4>Control lab</h4><p>Seasonal source-apportionment shares × lever adoption × lever efficiency give the new PM2.5, converted back to AQI.</p></div>
    <div><h4>Exposure planner</h4><p>Dose = PM2.5 × hourly factor × room infiltration × breathing rate × (1 − mask efficiency) × hours, compared with a WHO-guideline day.</p></div>
+   <div><h4>Ask SAANS</h4><p>BM25 ranking over a bilingual library of 44 checked facts, a synonym bridge between Hindi, English and Hinglish, phonetic matching for Hinglish spellings and typo correction. Numbers in a question go straight into the AQI, sky-eye, purifier and timing calculators, and the working is shown.</p></div>
+   <div><h4>Go-out verdict</h4><p>CPCB category × the person's sensitivity × how hard they will breathe gives Go, Go with care or Stay in, plus the cleanest window from the daily curve.</p></div>
    <div><h4>Health framing</h4><p>22 µg/m³ of PM2.5 breathed for 24 hours ≈ 1 cigarette, so exposure is easy to grasp.</p></div>
   </div>
  </section>
 
  <section id="offline" class="india">
-  <div><h2>Built for every Indian phone</h2><div class="big">74<small> KB</small></div><p style="color:#33505B;margin-top:10px">Smaller than a single photo. One self-contained file, with no libraries, fonts or network calls.</p></div>
+  <div><h2>Built for every Indian phone</h2><div class="big">146<small> KB</small></div><p style="color:#33505B;margin-top:10px">Smaller than a single photo. One self-contained file, with no libraries, fonts or network calls.</p></div>
   <div class="feat">
    <div><h4>Offline-first</h4><p>Works on airplane mode and on low-end phones. Once installed, it runs offline for good.</p></div>
    <div><h4>Private by design</h4><p>No login, no tracking, no permissions. Your records and saved complaints never leave the device.</p></div>
-   <div><h4>Bilingual and inclusive</h4><p>Full English and हिंदी, large type, keyboard-accessible controls and reduced-motion support.</p></div>
+   <div><h4>Bilingual and inclusive</h4><p>Full English and हिंदी, answers read aloud, a larger-text mode, a 30-second first-run tour, keyboard-accessible controls and reduced-motion support.</p></div>
    <div><h4>Air you can feel</h4><p>The whole interface hazes as the AQI rises, and a particle "breath orb" thickens with PM2.5.</p></div>
   </div>
  </section>
 
  <section id="impact" class="two">
   <div class="panel p1"><h3>Who it serves</h3><ul><li><b>Families:</b> profile-specific protection every day</li><li><b>Schools and colleges:</b> AQI literacy, outdoor-time planning and policy role-play</li><li><b>Pollution boards and municipalities:</b> structured, time-stamped citizen reports with the suspected source</li><li><b>Outdoor workers and the elderly:</b> clear actions for the people most exposed</li></ul></div>
-  <div class="panel p2"><h3>What's next</h3><ul><li>Pair with low-cost Bluetooth PM sensors</li><li>All 22 scheduled languages and voice guidance</li><li>Satellite farm-fire alerts when online, cached for offline</li><li>Ward dashboards for city NCAP cells</li><li>Field validation against monitoring stations in 3 cities</li></ul></div>
+  <div class="panel p2"><h3>What's next</h3><ul><li>Pair with low-cost Bluetooth PM sensors</li><li>All 22 scheduled languages, starting with मराठी</li><li>Satellite farm-fire alerts when online, cached for offline</li><li>Ward dashboards for city NCAP cells</li><li>Field validation against monitoring stations in 3 cities</li></ul></div>
  </section>
 
  <div class="final">

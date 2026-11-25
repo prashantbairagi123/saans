@@ -136,13 +136,62 @@ textarea{min-height:150px;font-size:13.5px;resize:vertical}
 .myth .f small,.myth .b small{font-weight:800;font-size:12px;margin-bottom:4px;opacity:.75}
 /* nav */
 .tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;z-index:5;width:min(460px,calc(100% - 20px));display:flex;justify-content:space-around;background:rgba(21,38,46,.94);border-radius:24px;padding:7px 6px;box-shadow:0 10px 30px rgba(21,38,46,.3)}
-.tabs button{border:0;background:transparent;color:#A9BEC6;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:650;padding:6px 8px;border-radius:16px;cursor:pointer;min-width:58px}
+.tabs button{border:0;background:transparent;color:#A9BEC6;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:650;padding:6px 4px;border-radius:16px;cursor:pointer;min-width:50px;flex:1}
+.tabs button.hot{color:#7FE0C2}
 .tabs button svg{width:22px;height:22px}
 .tabs button[aria-selected="true"]{color:#fff;background:rgba(255,255,255,.12)}
 #toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-size:14px;opacity:0;transition:.3s;z-index:9;pointer-events:none;max-width:90%}
 #toast.on{opacity:1;transform:translateX(-50%)}
 .view{animation:enter .35s ease}
 @keyframes enter{from{opacity:0;transform:translateY(6px)}}
+/* v2: header tools, verdict, listen, ask, tour */
+.hbtn{font:inherit;font-weight:800;font-size:13px;border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:4px 7px;cursor:pointer;color:var(--ink);min-width:30px}
+.hbtn[aria-pressed="true"]{background:var(--ink);color:#fff}
+html.big .app{zoom:1.14}html.big .tabs{zoom:1.06}
+.verd{display:flex;gap:12px;align-items:center;border-radius:16px;padding:12px 14px;margin:6px 0 10px;color:#fff}
+.verd .vi{font-size:28px;line-height:1;flex:none}
+.verd b{display:block;font-size:18px;letter-spacing:-.2px}
+.verd span{font-size:13.5px;opacity:.96;display:block}
+.v0{background:#1F7A5C}.v1{background:#A8650F}.v2{background:#B3261E}
+.say{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.say.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.hrow h2{margin:0}
+.h3{font-size:14px;margin:10px 0 6px}
+.askbox{display:flex;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:18px;padding:5px 5px 5px 12px;align-items:center}
+.askbox input{border:0;padding:8px 2px;font-size:15.5px;background:transparent;min-width:0;flex:1;width:100%;font:inherit;color:var(--ink)}
+.askbox input:focus-visible{outline:none}
+.askbox:focus-within{box-shadow:0 0 0 3px rgba(43,127,255,.35)}
+.ibtn{border:0;border-radius:13px;width:42px;height:42px;display:grid;place-items:center;cursor:pointer;background:rgba(21,38,46,.08);flex:none}
+.ibtn.go{background:var(--ink);color:#fff}
+.ibtn svg{width:20px;height:20px}
+.ibtn.rec{background:#D9452B;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.55}}
+.ex{display:flex;flex-wrap:wrap;gap:7px}
+.ex button{border:1.5px solid var(--line);background:rgba(255,255,255,.92);border-radius:14px;padding:8px 11px;font-size:13.5px;text-align:left;cursor:pointer}
+.und{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 2px 10px;font-size:12.5px}
+.und b{font-size:12px;color:var(--ink2);margin-right:2px}
+.ent{background:var(--leaf2);color:var(--leaf);border-radius:999px;padding:3px 9px;font-weight:700}
+.ent.fix{background:#FCEFD9;color:#7A4A06}
+.ent.w{background:rgba(21,38,46,.07);color:var(--ink2)}
+.big3{display:flex;align-items:center;gap:12px;margin:2px 0 4px}
+.big3 b{font-size:54px;letter-spacing:-2px;line-height:1;font-variant-numeric:tabular-nums}
+.kv{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;margin:2px 0 8px}
+.steps{background:rgba(21,38,46,.05);border-radius:12px;padding:10px 12px;font-size:12.5px;font-family:ui-monospace,"DejaVu Sans Mono",monospace;line-height:1.65;margin:8px 0;overflow-wrap:anywhere}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.btn.sm{padding:8px 12px;font-size:13.5px;border-radius:12px}
+.kind{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--leaf)}
+.rel{border-top:1px solid var(--line);padding:9px 0}
+.rel summary{cursor:pointer;font-weight:650;font-size:14px}
+.rel p{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.stat{font-size:12px;color:var(--ink2);text-align:center;margin:4px 0 6px}
+#tour{position:fixed;inset:0;z-index:20;background:rgba(21,38,46,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+#tour .card{background:#fff;border-radius:24px;max-width:440px;width:100%;padding:22px 20px 18px;margin-bottom:8px;animation:enter .3s}
+#tour .dots{display:flex;gap:6px;margin-bottom:12px}#tour .dots i{width:22px;height:5px;border-radius:3px;background:var(--line)}#tour .dots i.on{background:var(--ink)}
+#tour h2{font-size:21px;margin-bottom:6px}
+#tour p{color:var(--ink2);font-size:15px}
+#tour .ill{font-size:42px;margin-bottom:6px;line-height:1}
+@media (max-width:370px){.net{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (min-width:900px){
   .app{max-width:480px}
@@ -158,7 +207,7 @@ textarea{min-height:150px;font-size:13.5px;resize:vertical}
       <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#1C3A44"/><path d="M13 27c9-8 21 8 38-2M13 39c11-8 23 8 38-2" stroke="#7FE0C2" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
       <span>saans</span>
     </div>
-    <div class="top-r"><span id="net" class="net"></span><button id="lang" class="lang" aria-label="Switch language">हिं</button></div>
+    <div class="top-r"><span id="net" class="net"></span><button id="bigT" class="hbtn" aria-label="Larger text" aria-pressed="false">A+</button><button id="helpT" class="hbtn" aria-label="Quick tour">?</button><button id="lang" class="lang" aria-label="Switch language">हिं</button></div>
   </header>
   <main id="view"></main>
 </div>
@@ -175,7 +224,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 /* ---------- i18n ---------- */
 const T={en:{
  tAir:"Air",tDetect:"Detect",tControl:"Control",tPlan:"Plan",tAct:"Act",
- offline:"Offline ready",online:"Online · works offline too",
+ offline:"Offline ready",online:"Online",
  airH:"Your air, decoded",airS:"Set today's reading three ways — no internet, no sensor needed.",
  mDial:"Quick dial",mMeter:"Pollutant meter",mSky:"Sky-eye",
  dialHint:"Move to the AQI you saw on any display, news or app.",
@@ -226,10 +275,25 @@ const T={en:{
  a8:"Taught one person about AQI",a8s:"Awareness multiplies action",
  badgesT:"Badges",mythsT:"Myth or fact? Tap to flip",myth:"MYTH",fact:"FACT",
  b1:"First breath",b2:"Week of clean air",b3:"Source hunter",b4:"100 points",
- resetDay:"New day"
+ resetDay:"New day",
+ tAsk:"Ask",askH:"Ask SAANS",askS:"Deep search that runs on your phone, with no internet. Type or speak in English, हिंदी or Hinglish, with numbers if you have them.",
+ askPh:"e.g. AQI 320, can my child play outside?",tryT:"Try asking",recentT:"Recent questions",undT:"Understood",fixT:"Spelling fixed",
+ bestT:"Best answer",relT:"Related",calcT:"Worked out",noHit:"I couldn't find that in SAANS's offline library. Try simpler words, a number such as AQI 250, or one of the examples.",
+ statT:"Searched {n} facts and 5 calculators in {ms} ms, on this phone.",listen:"Listen",stop:"Stop",noVoice:"No voice for this language on this phone",
+ micNet:"Voice typing needs internet on this phone. Typing works offline.",micOn:"Listening…",micNo:"Voice typing isn't supported in this browser",
+ useAqi:"Use this AQI",usedAqi:"AQI set in the Air tab",openTab:"Open",todayBased:"Using today's AQI from the Air tab",
+ oAqi:"Overall AQI = the highest sub-index",visT:"Visibility",roomT:"Room",cadrT:"Purifier you need",cadrW:"volume × 5 air changes an hour",
+ winT:"Cleanest time today",typ:"Typical daily pattern for this season, scaled to your air.",cigS:"cigarettes/day",
+ goT:"Can I go out?",doT:"Doing what?",vWalk:"Walk",vCommute:"Commute / school",vRun:"Run / sport",vPlay:"Outdoor play",
+ L0:"Go ahead",L1:"Go, with care",L2:"Better to stay in",L0s:"The air is fine for this.",L1s:"Keep it short and light, away from busy roads.",L1n95:" Wear an N95.",L2s:"Move it indoors or put it off.",
+ winBetter:"Cleaner window",askAbout:"About this",
+ tour1H:"Know your air in 10 seconds",tour1:"Drag the dial to the AQI you saw, type in readings, or simply match the sky you can see. No sensor needed.",
+ tour2H:"Ask anything, even offline",tour2:"Type or speak in Hindi, English or Hinglish. SAANS works out the answer with real numbers and shows its reasoning.",
+ tour3H:"Find, plan, act",tour3:"Trace the likely source and draft a complaint, find your cleanest hours, and count your clean-air actions.",
+ next:"Next",skip:"Skip",start:"Start",bigOn:"Larger text on",bigOff:"Normal text"
 },hi:{
  tAir:"हवा",tDetect:"पता करें",tControl:"नियंत्रण",tPlan:"योजना",tAct:"कदम",
- offline:"ऑफ़लाइन तैयार",online:"ऑनलाइन · ऑफ़लाइन भी चलता है",
+ offline:"ऑफ़लाइन तैयार",online:"ऑनलाइन",
  airH:"आपकी हवा, आसान भाषा में",airS:"आज की रीडिंग तीन तरीकों से दर्ज करें — बिना इंटरनेट, बिना सेंसर।",
  mDial:"त्वरित डायल",mMeter:"प्रदूषक मीटर",mSky:"आसमान-दृष्टि",
  dialHint:"किसी डिस्प्ले, समाचार या ऐप में देखा AQI चुनें।",
@@ -280,9 +344,24 @@ const T={en:{
  a8:"एक व्यक्ति को AQI समझाया",a8s:"जागरूकता से कदम बढ़ते हैं",
  badgesT:"बैज",mythsT:"मिथक या तथ्य? पलटने के लिए टैप करें",myth:"मिथक",fact:"तथ्य",
  b1:"पहली साँस",b2:"स्वच्छ हवा सप्ताह",b3:"स्रोत खोजी",b4:"100 अंक",
- resetDay:"नया दिन"
+ resetDay:"नया दिन",
+ tAsk:"पूछें",askH:"SAANS से पूछें",askS:"आपके फ़ोन पर चलने वाली गहरी खोज, बिना इंटरनेट। हिंदी, अंग्रेज़ी या हिंग्लिश में लिखें या बोलें; संख्या हो तो वह भी।",
+ askPh:"जैसे: AQI 320 है, क्या बच्चा बाहर खेल सकता है?",tryT:"ऐसे पूछें",recentT:"हाल के प्रश्न",undT:"समझा गया",fixT:"वर्तनी सुधारी",
+ bestT:"सबसे सही उत्तर",relT:"संबंधित",calcT:"गणना",noHit:"यह SAANS के ऑफ़लाइन भंडार में नहीं मिला। सरल शब्द, AQI 250 जैसी संख्या, या कोई उदाहरण आज़माएँ।",
+ statT:"इस फ़ोन पर {n} तथ्यों और 5 कैलकुलेटर में {ms} ms में खोजा।",listen:"सुनें",stop:"रोकें",noVoice:"इस फ़ोन में इस भाषा की आवाज़ नहीं है",
+ micNet:"इस फ़ोन पर बोलकर लिखने के लिए इंटरनेट चाहिए। टाइप करना ऑफ़लाइन चलता है।",micOn:"सुन रहा है…",micNo:"इस ब्राउज़र में बोलकर लिखना उपलब्ध नहीं",
+ useAqi:"यह AQI लगाएँ",usedAqi:"हवा टैब में AQI लगा दिया",openTab:"खोलें",todayBased:"हवा टैब के आज के AQI से",
+ oAqi:"कुल AQI = सबसे ऊँचा उप-सूचकांक",visT:"दृश्यता",roomT:"कमरा",cadrT:"ज़रूरी प्यूरीफ़ायर",cadrW:"आयतन × प्रति घंटा 5 वायु-परिवर्तन",
+ winT:"आज का सबसे साफ़ समय",typ:"इस मौसम का सामान्य दैनिक पैटर्न, आपकी हवा के अनुसार।",cigS:"सिगरेट/दिन",
+ goT:"क्या बाहर जा सकते हैं?",doT:"क्या करना है?",vWalk:"सैर",vCommute:"आना-जाना / स्कूल",vRun:"दौड़ / खेल-कूद",vPlay:"बाहर खेलना",
+ L0:"जा सकते हैं",L1:"सावधानी से जाएँ",L2:"अंदर रहना बेहतर",L0s:"इसके लिए हवा ठीक है।",L1s:"कम समय और हल्का रखें, व्यस्त सड़कों से दूर।",L1n95:" N95 पहनें।",L2s:"इसे घर के अंदर करें या टाल दें।",
+ winBetter:"साफ़ समय",askAbout:"इसके बारे में",
+ tour1H:"10 सेकंड में अपनी हवा जानें",tour1:"देखा हुआ AQI डायल पर लगाएँ, रीडिंग डालें, या बस जो आसमान दिख रहा है उससे मिलान करें। सेंसर की ज़रूरत नहीं।",
+ tour2H:"कुछ भी पूछें, बिना इंटरनेट",tour2:"हिंदी, अंग्रेज़ी या हिंग्लिश में लिखें या बोलें। SAANS असली संख्याओं से उत्तर निकालता है और अपना तर्क दिखाता है।",
+ tour3H:"पता करें, योजना बनाएँ, कदम उठाएँ",tour3:"संभावित स्रोत खोजें और शिकायत बनाएँ, सबसे साफ़ समय जानें, और अपने स्वच्छ-हवा कदम गिनें।",
+ next:"आगे",skip:"छोड़ें",start:"शुरू करें",bigOn:"बड़े अक्षर चालू",bigOff:"सामान्य अक्षर"
 }};
-const S=Object.assign({lang:"en",tab:"air",mode:"dial",aqi:186,pm:null,profile:"pGen",vis:4,rh:"normal",meter:{},det:{},levers:{veh:0,stub:0,dust:0,ind:0,waste:0,home:0},day:null,room:[4,3.5,3],acts:{},hist:{},reports:[],myths:{}},store.get("state",{}));
+const S=Object.assign({lang:"en",tab:"air",mode:"dial",aqi:186,pm:null,profile:"pGen",vis:4,rh:"normal",meter:{},det:{},levers:{veh:0,stub:0,dust:0,ind:0,waste:0,home:0},day:null,room:[4,3.5,3],acts:{},hist:{},reports:[],myths:{},actv:"vWalk",askHist:[],askQ:"",toured:false,big:false},store.get("state",{}));
 const t=k=>(T[S.lang]&&T[S.lang][k])||T.en[k]||k;
 const save=()=>store.set("state",S);
 
@@ -319,8 +398,9 @@ const ICON={
  control:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4v16M12 4v16M19 4v16"/><circle cx="5" cy="14" r="2.2" fill="currentColor"/><circle cx="12" cy="8" r="2.2" fill="currentColor"/><circle cx="19" cy="16" r="2.2" fill="currentColor"/></svg>',
  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17c3-8 5-8 7-3s4 4 6-2 3-6 5-4"/><path d="M3 21h18"/></svg>',
  act:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21c-5-3-8-7-8-12a8 8 0 0 1 16 0c0 5-3 9-8 12z"/><path d="m8.5 11 2.5 2.5L16 8.5"/></svg>'};
-const TABS=[["air","tAir"],["detect","tDetect"],["control","tControl"],["plan","tPlan"],["act","tAct"]];
-function renderTabs(){$("#tabs").innerHTML=TABS.map(([id,k])=>`<button role="tab" data-tab="${id}" aria-selected="${S.tab===id}">${ICON[id]}<span>${t(k)}</span></button>`).join("")}
+ICON.ask='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M10.5 7.2l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z" fill="currentColor" stroke-width="1"/></svg>';
+const TABS=[["air","tAir"],["detect","tDetect"],["ask","tAsk"],["control","tControl"],["plan","tPlan"],["act","tAct"]];
+function renderTabs(){$("#tabs").innerHTML=TABS.map(([id,k])=>`<button role="tab" data-tab="${id}" aria-selected="${S.tab===id}"${id==="ask"?' class="hot"':""}>${ICON[id]}<span>${t(k)}</span></button>`).join("")}
 function chips(group,opts,cur,multi){return `<div class="chips" role="group">${opts.map(o=>{const on=multi?(cur||[]).includes(o):cur===o;return `<button class="chip" data-g="${group}" data-v="${o}" aria-pressed="${on}">${esc(t(o))}</button>`}).join("")}</div>`}
 
 /* ================= AIR ================= */
@@ -342,7 +422,7 @@ function viewAir(){
    <div class="seg" role="group">${[["dial","mDial"],["meter","mMeter"],["sky","mSky"]].map(([m,k])=>`<button data-mode="${m}" aria-pressed="${S.mode===m}">${t(k)}</button>`).join("")}</div>
    ${measure}
   </section>
-  <section class="panel"><h2>${t("who")}</h2>${chips("profile",["pGen","pChild","pOld","pAsth","pPreg","pWork"],S.profile)}</section>
+  <section class="panel"><h2>${t("who")}</h2>${chips("profile",["pGen","pChild","pOld","pAsth","pPreg","pWork"],S.profile)}<h3 class="h3">${t("doT")}</h3>${chips("actv",["vWalk","vCommute","vRun","vPlay"],S.actv)}</section>
   <section class="panel" id="advice">${adviceHtml(r)}</section>
   </div>`;
 }
@@ -363,8 +443,21 @@ const ADV={
  pPreg:[["Enjoy a walk outside."],["Prefer green, low-traffic routes."],["Limit time near traffic.","Ventilate when air is cleaner (afternoon)."],["Avoid outdoor exertion; N95 outdoors.","Use a purifier where you sleep."],["Stay indoors; purifier on.","Discuss any symptoms with your doctor."],["Stay indoors in a purified room.","Consult your doctor on any discomfort."]],
  pWork:[["Normal work."],["Take breaks away from traffic."],["Wear a mask near roads; hydrate.","Rotate to shaded, less busy spots."],["N95 throughout the shift.","Employers should give rest breaks indoors."],["N95 and shorter shifts.","Wet-clean dust at site; employer duty under GRAP."],["Outdoor heavy work should pause.","Construction halts under GRAP Stage IV."]]};
 const ADVHI={pChild:[["आज बाहर खेलना बढ़िया है।"],["बाहर खेलें; व्यस्त सड़कों से दूर।"],["बाहर कम समय खेलें, ट्रैफ़िक से दूर।"],["खेल घर के अंदर करें।","स्कूल आने-जाने में बच्चों का N95।"],["बच्चों को घर में रखें; स्कूल ऑनलाइन हो सकते हैं।","खाँसी या घरघराहट पर ध्यान दें।"],["बच्चों को सबसे साफ़ कमरे में रखें।","साँस फूलने पर डॉक्टर से मिलें।"]],pOld:[["सुबह की सैर ठीक है।"],["सड़कों से दूर पार्क में टहलें।"],["घर में या दोपहर में टहलें।","दवाइयाँ पास रखें।"],["आज बाहर सैर न करें।","BP और साँस पर नज़र रखें।"],["घर में रहें; प्यूरीफ़ायर चलाएँ।","सीने में जकड़न हो तो डॉक्टर से संपर्क करें।"],["सबसे साफ़ कमरे में रहें।","सीने में दर्द या साँस फूलने पर तुरंत इलाज लें।"]],pAsth:[["सामान्य दिनचर्या।"],["इनहेलर साथ रखें।"],["रिलीवर इनहेलर साथ रखें; बाहर मेहनत न करें।","अपनी एक्शन प्लान का पालन करें।"],["प्रिवेंटर दवा समय पर लें; बाहर न जाएँ।","जाना ज़रूरी हो तो N95।"],["घर में रहें; रिलीवर पास रखें।","रिलीवर ज़्यादा लगे तो डॉक्टर से मिलें।"],["बिल्कुल मेहनत न करें।","आपात योजना तैयार रखें।"]],pPreg:[["बाहर टहलने का आनंद लें।"],["हरे-भरे, कम ट्रैफ़िक वाले रास्ते चुनें।"],["ट्रैफ़िक के पास कम समय बिताएँ।","दोपहर में हवादारी करें।"],["बाहर मेहनत न करें; बाहर N95।","सोने के कमरे में प्यूरीफ़ायर।"],["घर में रहें; प्यूरीफ़ायर चालू रखें।","कोई लक्षण हो तो डॉक्टर से बात करें।"],["साफ़ किए गए कमरे में रहें।","किसी भी असुविधा पर डॉक्टर से परामर्श लें।"]],pWork:[["सामान्य काम।"],["ट्रैफ़िक से दूर विश्राम लें।"],["सड़क के पास मास्क पहनें; पानी पीते रहें।","छायादार, कम भीड़ वाली जगह बदलें।"],["पूरी पाली में N95।","नियोक्ता अंदर विश्राम दें।"],["N95 और छोटी पालियाँ।","साइट पर धूल गीली करें; GRAP में नियोक्ता की ज़िम्मेदारी।"],["भारी बाहरी काम रुकना चाहिए।","GRAP चरण IV में निर्माण बंद।"]],pGen:[["बाहर की गतिविधि का आनंद लें।"],["आनंद लें; संवेदनशील लोग लक्षणों पर ध्यान दें।"],["लंबा/कड़ा बाहरी व्यायाम घटाएँ।","ट्रैफ़िक के समय खिड़कियाँ बंद रखें।"],["बाहर व्यायाम न करें; दौड़ें नहीं, चलें।","बाहर N95 पहनें।","शयनकक्ष में प्यूरीफ़ायर चलाएँ।"],["जितना हो सके घर में रहें।","बाहर जाने पर N95।","खिड़कियाँ बंद; दरारें गीले कपड़े से ढकें।"],["बाहर जाने से बचें।","बाहर N95 अनिवार्य।","प्यूरीफ़ायर तेज़; अगरबत्ती, तलना, मोमबत्ती नहीं।"]]};
-function adviceHtml(r){const set=(S.lang==="hi"&&ADVHI[S.profile])?ADVHI[S.profile]:ADV[S.profile];const list=set[r.cat];
-  return `<h2>${t("doNow")}</h2><div class="impact">${t("imp"+r.cat)}</div><ul class="advice">${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`}
+function advList(prof,c){return ((S.lang==="hi"&&ADVHI[prof])?ADVHI[prof]:ADV[prof])[c]}
+/* go-out verdict: CPCB category x sensitivity x exertion -> 0 go, 1 care, 2 stay in */
+const SENS={pGen:0,pChild:1,pOld:1,pAsth:2,pPreg:1,pWork:0};
+function verdictOf(aqi,prof,act){const c=catOf(aqi),s=SENS[prof]||0,h=(act==="vRun"||act==="vPlay")?1:0;
+  if(c<=1)return(c===1&&s===2&&h)?1:0;if(c===2)return(s>=2||(s>=1&&h))?1:0;if(c===3)return h?2:1;if(c===4)return(h||s>=1)?2:1;return 2}
+function windowFor(pm,aqi){const{b,f}=bestWindow(),ab=subIndex("pm25",pm*f[b]);return{b,ab,better:ab<aqi-15}}
+const SAY={},SAYL={};
+function sayBtn(key,text,lang){SAY[key]=text;SAYL[key]=lang||S.lang;return `<button class="say" data-say="${key}" aria-label="${t("listen")}">🔊 ${t("listen")}</button>`}
+function verdictHtml(aqi,prof,act,w){const L=verdictOf(aqi,prof,act),c=catOf(aqi);
+  const tip=L===0?t("L0s"):L===1?t("L1s")+(c>=3?t("L1n95"):""):t("L2s");
+  const win=L>0&&w.better?` ${t("winBetter")}: ${hh(w.b)}–${hh(w.b+2)} (AQI ≈ ${w.ab}).`:"";
+  return {L,html:`<div class="verd v${L}" role="status"><span class="vi" aria-hidden="true">${["✅","⚠️","🏠"][L]}</span><div><b>${t("L"+L)}</b><span>${esc(t(prof))} · ${esc(t(act))} · AQI ${aqi}</span><span>${esc(tip+win)}</span></div></div>`,text:`${t("L"+L)}. ${tip}${win}`}}
+function adviceHtml(r){const list=advList(S.profile,r.cat),v=verdictHtml(r.aqi,S.profile,S.actv,windowFor(r.pm,r.aqi));
+  const say=`AQI ${r.aqi}, ${t("cat"+r.cat)}. ${v.text} ${t("imp"+r.cat)} ${list.join(" ")}`;
+  return `<div class="hrow"><h2>${t("goT")}</h2>${sayBtn("adv",say)}</div>${v.html}<div class="impact">${t("imp"+r.cat)}</div><h3 class="h3">${t("doNow")}</h3><ul class="advice">${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`}
 function updAir(){const r=reading();applyMood(r);
   const set=(id,v)=>{const e=$(id);if(e)e.textContent=v};
   set("#aqiN",r.aqi);set("#catN",t("cat"+r.cat));set("#pmL",`PM2.5 ≈ ${Math.round(r.pm)} µg/m³ · AQI`);set("#fCig",(r.pm/22).toFixed(1));set("#fGrap",grapOf(r.aqi));set("#fDom",r.dom?PNAME[r.dom]:t("none"));
@@ -538,21 +631,341 @@ function viewAct(){const done=S.hist[today()]||[],s=actStats(),hi=S.lang==="hi";
   ${M.map((m,i)=>`<div class="myth ${S.myths[i]?"flip":""}" data-myth="${i}" role="button" tabindex="0" aria-label="${esc(m[0])}"><div class="in"><div class="f"><small>${t("myth")}?</small><b>${esc(m[0])}</b></div><div class="b"><small>${t("fact")}</small>${esc(m[1])}</div></div></div>`).join("")}
   </div>`}
 
+/* ================= ASK: offline deep search ================= */
+/* ===== ASK core: offline deep search for English, Hindi and Hinglish =====
+   BM25 ranking over a bilingual knowledge base, a synonym bridge between
+   scripts, phonetic squashing for Hinglish spellings, typo correction and
+   on-device speech. No network, no libraries. */
+const AskCore=(()=>{
+ const DEV="०१२३४५६७८९";
+ const digits=s=>String(s).replace(/[०-९]/g,d=>DEV.indexOf(d));
+ const STOP=new Set(("the a an is are was were be been of to in on for and or what how why when which who whom do does did i my me we our you your it its this that these those can could should would will shall with at by from as if so than then there their them they he she his her about into any some much many also just please tell me us show give get need want know make one am day days daily week weekly month monthly year yearly each per vs versus use using much "+
+  "kya kyaa hai hain he ka ki ke ko se me mein mai main aur ya kaise kaisa kaisi kyon kyu kyun kab kahan kaha kaun kitna kitni kitne batao bataiye bataye karu karun kare karein karna karte karta ho hota hoti hote ek kuch mera meri mere hum aap yeh ye woh wo par pe bhi to tha thi hona sakta sakti sakte chahiye chaiye abhi raha rahi rahe wala wali wale din roz roj rozana saal mahina mahine "+
+  "क्या है हैं था थी थे का की के को से में मे और या कैसे कैसा कैसी क्यों क्यो कब कहाँ कहां कौन कितना कितनी कितने बताओ बताइए बताएं बताएँ करूँ करू करें करे करना करते करता हो होता होती होते एक कुछ मैं मेरा मेरी मेरे हम आप यह ये वह वो पर भी तो होना सकता सकती सकते चाहिए अभी रहा रही रहे वाला वाली वाले जी दिन रोज़ रोज रोज़ाना साल महीना महीने हफ़्ते").split(" "));
+ // nukta and chandrabindu variants collapse to one spelling
+ const norm=s=>digits(String(s)).toLowerCase().normalize("NFC").replace(/़/g,"").replace(/ँ/g,"ं")
+   .replace(/[।॥.,!?;:()"'“”‘’\/\\\-–—+*=<>\[\]{}|#@&%^~`₹]/g," ");
+ // Hinglish phonetic squash: bachcha / baccha / bacha -> bac a
+ const squash=w=>/^[a-z]+$/.test(w)?w.replace(/([bcdfgjkptsr])h/g,"$1").replace(/(.)\1+/g,"$1").replace(/(ee|ii)/g,"i").replace(/(oo|uu)/g,"u").replace(/[aeiou]$/,"a"):w;
+ const stem=w=>{if(!/^[a-z]+$/.test(w))return w;
+  if(w.length>4&&w.endsWith("ies"))return w.slice(0,-3)+"y";
+  if(w.length>5&&w.endsWith("ing"))return w.slice(0,-3);
+  if(w.length>4&&w.endsWith("ed"))return w.slice(0,-2);
+  if(w.length>3&&w.endsWith("s")&&!w.endsWith("ss"))return w.slice(0,-1);return w};
+ function lev(a,b,max){if(Math.abs(a.length-b.length)>max)return max+1;const m=a.length,n=b.length;let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const c=[i];let lo=i;for(let j=1;j<=n;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));if(c[j]<lo)lo=c[j]}if(lo>max)return max+1;p=c}return p[n]}
+ function Engine(docs,synList){
+  this.syn={};this.sq={};
+  // synList: {canonical:"word1 word2 ..."}; canonical maps to itself
+  for(const can in synList){const all=(can+" "+synList[can]).split(/\s+/).filter(Boolean);
+   all.forEach(w=>{const n=norm(w).trim();if(!n)return;this.syn[n]=can;this.syn[stem(n)]=this.syn[stem(n)]||can;this.sq[squash(n)]=this.sq[squash(n)]||can})}
+  this.docs=docs;this.df={};this.len=[];this.tf=[];let tot=0;
+  docs.forEach((d,i)=>{const toks=[].concat(...[[d.t,3],[d.th,3],[d.k,2],[d.a,1],[d.ah,1]].map(([s,w])=>{const t=this.toks(s||"").map(x=>x.w);let o=[];for(let r=0;r<w;r++)o=o.concat(t);return o}));
+   const tf={};toks.forEach(w=>tf[w]=(tf[w]||0)+1);this.tf[i]=tf;this.len[i]=toks.length;tot+=toks.length;Object.keys(tf).forEach(w=>this.df[w]=(this.df[w]||0)+1)});
+  this.avg=tot/Math.max(1,docs.length);this.vocab=Object.keys(this.df);
+ }
+ Engine.prototype.canon=function(raw){const s=stem(raw);return this.syn[raw]||this.syn[s]||this.sq[squash(raw)]||s};
+ Engine.prototype.toks=function(s){return norm(s).split(/\s+/).filter(w=>w&&!STOP.has(w)&&!/^\d+$/.test(w)).map(w=>({raw:w,w:this.canon(w)}))};
+ Engine.prototype.search=function(q,n){const t0=performance.now();let qt=this.toks(q);const fixed=[];
+  qt=qt.map(x=>{if(this.df[x.w]||x.w.length<5||!/^[a-z]+$/.test(x.w))return x;let best=null,bd=9;const max=x.w.length>=7?2:1;
+   for(const v of this.vocab){if(v.length<4)continue;const d=lev(x.w,v,max);if(d<=max&&(d<bd||(d===bd&&this.df[v]>this.df[best]))){bd=d;best=v}}
+   if(best){fixed.push([x.raw,best]);return{raw:x.raw,w:best}}return x});
+  const uniq=[...new Set(qt.map(x=>x.w))],N=this.docs.length,k1=1.4,b=.6;
+  const hits=this.docs.map((d,i)=>{let s=0;const m=[];uniq.forEach(w=>{const f=this.tf[i][w];if(!f)return;const idf=Math.log(1+(N-this.df[w]+.5)/(this.df[w]+.5));s+=idf*f*(k1+1)/(f+k1*(1-b+b*this.len[i]/this.avg));m.push(w)});
+   if(m.length>1)s*=1+.18*(m.length-1);return{d,s,m}}).filter(h=>h.s>0).sort((a,b)=>b.s-a.s);
+  return{terms:uniq,fixed,hits:hits.slice(0,n||6),ms:performance.now()-t0,size:N}};
+ // ---- numbers & units
+ function num(q,re){const m=digits(q).toLowerCase().match(re);return m?parseFloat(m[1].replace(",",".")):null}
+ // ---- speech out (works offline with the phone's built-in voices)
+ function speak(text,lang,onEnd){try{const s=window.speechSynthesis;if(!s)return false;s.cancel();const u=new SpeechSynthesisUtterance(String(text).replace(/[★✓•→➜]/g," "));
+  u.lang=lang==="hi"?"hi-IN":"en-IN";const vs=s.getVoices()||[];const v=vs.find(v=>(v.lang||"").toLowerCase().replace("_","-")===(lang==="hi"?"hi-in":"en-in"))||vs.find(v=>(v.lang||"").toLowerCase().startsWith(lang==="hi"?"hi":"en"));
+  if(v)u.voice=v;u.rate=.95;if(onEnd)u.onend=onEnd;s.speak(u);return true}catch(e){return false}}
+ function hush(){try{window.speechSynthesis&&window.speechSynthesis.cancel()}catch(e){}}
+ // ---- speech in (browser speech recognition; some phones need internet for it)
+ const SR=typeof window!=="undefined"&&(window.SpeechRecognition||window.webkitSpeechRecognition);
+ function listen(lang,onText,onErr){if(!SR){onErr&&onErr("none");return null}try{const r=new SR();r.lang=lang==="hi"?"hi-IN":"en-IN";r.interimResults=false;r.maxAlternatives=1;
+  r.onresult=e=>onText(e.results[0][0].transcript);r.onerror=e=>onErr&&onErr(e.error||"err");r.start();return r}catch(e){onErr&&onErr("err");return null}}
+ return{Engine,norm,digits,num,speak,hush,listen,canListen:!!SR,canSpeak:typeof window!=="undefined"&&"speechSynthesis" in window};
+})();
+
+/* SAANS offline knowledge base: bilingual, each entry checked against its source family (CPCB, CAQM, WHO, MoEFCC). */
+const KB=[
+{id:"aqi",t:"What is the AQI?",th:"AQI क्या है?",k:"aqi index number meaning matlab samjhao सूचकांक",
+ a:"The Air Quality Index turns up to eight pollutant readings into one number from 0 to 500. Each pollutant gets a sub-index from CPCB breakpoints, and the highest sub-index becomes the AQI. Higher means worse.",
+ ah:"वायु गुणवत्ता सूचकांक (AQI) आठ तक प्रदूषकों की रीडिंग को 0 से 500 की एक संख्या में बदलता है। हर प्रदूषक का उप-सूचकांक CPCB ब्रेकपॉइंट से निकलता है, और सबसे ऊँचा उप-सूचकांक ही AQI होता है। संख्या जितनी ऊँची, हवा उतनी ख़राब।",go:"air"},
+{id:"cats",t:"AQI colours and categories",th:"AQI के रंग और श्रेणियाँ",k:"category colour color range good satisfactory moderate poor very severe green yellow red level",
+ a:"0–50 Good (green), 51–100 Satisfactory, 101–200 Moderate (yellow), 201–300 Poor (orange), 301–400 Very poor (red), 401–500 Severe (maroon).",
+ ah:"0–50 अच्छा (हरा), 51–100 संतोषजनक, 101–200 मध्यम (पीला), 201–300 ख़राब (नारंगी), 301–400 बहुत ख़राब (लाल), 401–500 गंभीर (मरून)।",go:"air"},
+{id:"pm25",t:"What is PM2.5?",th:"PM2.5 क्या है?",k:"pm25 fine particle particulate kan small tiny blood",
+ a:"PM2.5 are particles smaller than 2.5 micrometres, about 30 times thinner than a hair. They go deep into the lungs and can enter the blood. Sources: smoke, vehicle exhaust, industry and chemical reactions in the air.",
+ ah:"PM2.5 वे कण हैं जो 2.5 माइक्रोमीटर से छोटे हैं, बाल से लगभग 30 गुना पतले। ये फेफड़ों में गहराई तक जाते हैं और ख़ून में भी पहुँच सकते हैं। स्रोत: धुआँ, वाहन, उद्योग और हवा में होने वाली रासायनिक क्रियाएँ।"},
+{id:"pm10",t:"PM10 and PM2.5: the difference",th:"PM10 और PM2.5 में अंतर",k:"pm10 coarse dust difference antar farak",
+ a:"PM10 includes all particles up to 10 micrometres, including coarse dust from roads and construction. PM2.5 is the finer, more harmful part. Dusty summer days often have high PM10; smoky winter days have high PM2.5.",
+ ah:"PM10 में 10 माइक्रोमीटर तक के सभी कण आते हैं, जिनमें सड़क और निर्माण की मोटी धूल भी है। PM2.5 उसका बारीक और ज़्यादा हानिकारक हिस्सा है। गर्मियों के धूल भरे दिनों में PM10 और सर्दियों के धुएँ वाले दिनों में PM2.5 ज़्यादा होता है।"},
+{id:"gases",t:"NO₂, ozone, SO₂, CO and ammonia",th:"NO₂, ओज़ोन, SO₂, CO और अमोनिया",k:"no2 o3 ozone so2 co nh3 ammonia gas gases sulphur nitrogen carbon monoxide",
+ a:"NO₂ comes mainly from traffic. Ozone forms in sunlight, so it peaks on summer afternoons. SO₂ comes from burning coal and oil. CO is from incomplete burning, and ammonia mostly from farms and waste. SAANS's pollutant meter computes the AQI from all of them.",
+ ah:"NO₂ मुख्यतः ट्रैफ़िक से आती है। ओज़ोन धूप में बनती है, इसलिए गर्मियों की दोपहर में सबसे ज़्यादा होती है। SO₂ कोयला और तेल जलाने से, CO अधूरे दहन से, और अमोनिया ज़्यादातर खेती और कचरे से आती है। SAANS का प्रदूषक मीटर इन सबसे AQI निकालता है।",go:"air"},
+{id:"grap",t:"GRAP stages in Delhi-NCR",th:"दिल्ली-एनसीआर में GRAP के चरण",k:"grap stage graded response action plan caqm ban band delhi ncr construction truck school",
+ a:"The Graded Response Action Plan adds curbs as AQI rises: Stage I at 201–300, Stage II at 301–400, Stage III at 401–450 and Stage IV above 450. Higher stages stop non-essential construction and demolition, restrict older diesel and petrol vehicles and trucks, and can move schools to hybrid or online classes. CAQM notifies and revises the exact measures.",
+ ah:"ग्रेडेड रिस्पॉन्स एक्शन प्लान में AQI बढ़ने के साथ पाबंदियाँ बढ़ती हैं: चरण I 201–300, चरण II 301–400, चरण III 401–450 और चरण IV 450 से ऊपर। ऊँचे चरणों में ग़ैर-ज़रूरी निर्माण व तोड़फोड़ बंद होती है, पुराने डीज़ल-पेट्रोल वाहनों और ट्रकों पर रोक लगती है, और स्कूल हाइब्रिड या ऑनलाइन हो सकते हैं। सटीक उपाय CAQM अधिसूचित और संशोधित करता है।"},
+{id:"ncap",t:"National Clean Air Programme",th:"राष्ट्रीय स्वच्छ वायु कार्यक्रम (NCAP)",k:"ncap programme program government sarkar scheme yojana target city 131 policy",
+ a:"NCAP was launched in 2019 for 131 cities. Its target is up to a 40% cut in PM10 by 2025–26 from 2017–18 levels, with city action plans and performance-linked funding.",
+ ah:"NCAP 2019 में 131 शहरों के लिए शुरू हुआ। इसका लक्ष्य 2017–18 की तुलना में 2025–26 तक PM10 में 40% तक कमी है, जिसके लिए शहर-वार कार्य योजनाएँ और प्रदर्शन से जुड़ा अनुदान है।"},
+{id:"std",t:"Safe limits: WHO and India",th:"सुरक्षित सीमाएँ: WHO और भारत",k:"who guideline standard limit naaqs safe surakshit seema 15 60",
+ a:"WHO's 2021 guideline for PM2.5 is 15 µg/m³ over 24 hours and 5 µg/m³ a year. India's national standard (NAAQS) is 60 µg/m³ over 24 hours and 40 a year. For PM10, India allows 100 over 24 hours.",
+ ah:"WHO के 2021 दिशानिर्देश में PM2.5 की सीमा 24 घंटे के लिए 15 µg/m³ और साल भर के लिए 5 µg/m³ है। भारत का राष्ट्रीय मानक (NAAQS) 24 घंटे के लिए 60 और साल के लिए 40 है। PM10 के लिए भारत 24 घंटे में 100 की अनुमति देता है।"},
+{id:"mask",t:"Which mask stops PM2.5?",th:"कौन-सा मास्क PM2.5 रोकता है?",k:"mask n95 kn95 ffp2 surgical cloth kapda fit filter",
+ a:"A well-fitted N95 (or FFP2) filters about 95% of fine particles. Surgical masks filter less, and loose cloth masks very little. Fit matters most: no gaps at the nose or cheeks. People with serious heart or lung disease should ask their doctor before using one.",
+ ah:"सही फ़िट वाला N95 (या FFP2) लगभग 95% बारीक कण रोकता है। सर्जिकल मास्क कम और ढीला कपड़े का मास्क बहुत कम रोकता है। सबसे ज़रूरी है फ़िट: नाक या गालों पर कोई ख़ाली जगह न हो। गंभीर हृदय या फेफड़े के रोगी पहले डॉक्टर से पूछें।",go:"plan"},
+{id:"purifier",t:"Choosing an air purifier",th:"एयर प्यूरीफ़ायर कैसे चुनें",k:"purifier cleaner hepa cadr room size kamra filter machine",
+ a:"Pick a HEPA purifier whose CADR is at least 5 times the room volume per hour. Keep doors and windows shut while it runs and change filters on time. Avoid ozone-making ionisers. Ask SAANS with your room size, for example 4x3x3.",
+ ah:"ऐसा HEPA प्यूरीफ़ायर चुनें जिसका CADR कमरे के आयतन का कम से कम 5 गुना प्रति घंटा हो। चलते समय दरवाज़े-खिड़कियाँ बंद रखें और समय पर फ़िल्टर बदलें। ओज़ोन बनाने वाले आयनाइज़र से बचें। अपने कमरे का आकार लिखकर पूछें, जैसे 4x3x3।",go:"plan"},
+{id:"plants",t:"Do indoor plants clean the air?",th:"क्या घर के पौधे हवा साफ़ करते हैं?",k:"plant plants indoor tulsi money myth",
+ a:"Not meaningfully. You would need hundreds of plants in one room to match a small purifier. Plants are good for you in other ways, but they are not air cleaners.",
+ ah:"असरदार रूप से नहीं। एक छोटे प्यूरीफ़ायर जितना असर पाने के लिए एक कमरे में सैकड़ों पौधे चाहिए। पौधे दूसरे तरीक़ों से अच्छे हैं, पर एयर क्लीनर नहीं।"},
+{id:"tower",t:"Can smog towers clean a city?",th:"क्या स्मॉग टावर शहर साफ़ कर सकते हैं?",k:"smog tower gun anti myth",
+ a:"No. A tower cleans only a small zone around it while polluted air keeps flowing in. Cutting emissions at their source works far better.",
+ ah:"नहीं। टावर केवल अपने आसपास का छोटा क्षेत्र साफ़ करता है, जबकि प्रदूषित हवा लगातार आती रहती है। स्रोत पर उत्सर्जन घटाना कहीं ज़्यादा असरदार है।"},
+{id:"winter",t:"Why is winter air so bad?",th:"सर्दियों में हवा इतनी ख़राब क्यों होती है?",k:"winter cold inversion fog season mausam why weather wind mixing november",
+ a:"In winter, cold air near the ground gets trapped under warmer air (an inversion), winds are weak and the mixing layer is low, so smoke stays close to us. Crop fires in October–November and heating fires add more. Monsoon rain washes the air clean.",
+ ah:"सर्दियों में ज़मीन के पास ठंडी हवा ऊपर की गर्म हवा के नीचे फँस जाती है (इन्वर्ज़न), हवा धीमी होती है और मिश्रण परत नीची रहती है, इसलिए धुआँ हमारे पास ही रहता है। अक्टूबर–नवंबर में पराली और सर्दी में अलाव इसे और बढ़ाते हैं। मानसून की बारिश हवा धो देती है।"},
+{id:"morning",t:"Is a winter morning walk healthy?",th:"क्या सर्दियों में सुबह की सैर अच्छी है?",k:"morning walk subah sair exercise time best when kab winter",
+ a:"On smoggy winter days, early morning is often the dirtiest time because the inversion traps smoke until mid-morning. Afternoons are usually cleaner. The Plan tab shows your cleanest window.",
+ ah:"धुंध वाली सर्दियों में सुबह-सुबह अक्सर सबसे गंदी हवा होती है, क्योंकि इन्वर्ज़न सुबह देर तक धुआँ रोके रखता है। दोपहर आमतौर पर साफ़ होती है। 'योजना' टैब आपका सबसे साफ़ समय दिखाता है।",go:"plan"},
+{id:"exercise",t:"Exercising on polluted days",th:"प्रदूषण वाले दिनों में व्यायाम",k:"exercise run running gym sport cricket football workout",
+ a:"Hard exercise makes you breathe several times more air. Above AQI 200, move running and sports indoors or to the cleanest hours, and keep it lighter. Above 300, avoid outdoor exertion.",
+ ah:"कड़ा व्यायाम करने पर आप कई गुना ज़्यादा हवा साँस में लेते हैं। AQI 200 से ऊपर दौड़ और खेल घर के अंदर या सबसे साफ़ समय में, और हल्के करें। 300 से ऊपर बाहर मेहनत से बचें।",go:"plan"},
+{id:"stubble",t:"Crop-residue (stubble) burning",th:"पराली जलाना",k:"stubble parali crop residue farm fire punjab haryana paddy happy seeder decomposer",
+ a:"After the paddy harvest in October–November, fields are burnt to clear stubble. Alternatives include the Happy Seeder, bio-decomposer sprays and selling residue for fuel. On peak days, farm fires can add a large share of the city's PM2.5.",
+ ah:"अक्टूबर–नवंबर में धान कटाई के बाद पराली साफ़ करने के लिए खेत जलाए जाते हैं। विकल्प हैं हैप्पी सीडर, बायो-डीकंपोज़र का छिड़काव और पराली को ईंधन के लिए बेचना। चरम दिनों में खेतों की आग शहर के PM2.5 का बड़ा हिस्सा बन सकती है।",go:"detect"},
+{id:"crackers",t:"Firecrackers and Diwali air",th:"पटाख़े और दिवाली की हवा",k:"firecracker diwali festival green cracker celebration",
+ a:"One night of heavy cracker bursting can push the AQI to Severe, and the smoke carries metals. Green crackers from CSIR-NEERI emit about 30% less, but no cracker is clean. Celebrate with lights and community events.",
+ ah:"एक रात की भारी आतिशबाज़ी AQI को 'गंभीर' तक पहुँचा सकती है, और उसके धुएँ में धातुएँ होती हैं। CSIR-NEERI के ग्रीन पटाख़े लगभग 30% कम प्रदूषण करते हैं, पर कोई पटाख़ा साफ़ नहीं है। रोशनी और सामुदायिक कार्यक्रमों से त्योहार मनाएँ।"},
+{id:"vehicles",t:"Vehicles: what helps",th:"वाहन: क्या मदद करता है",k:"vehicle car bike scooter diesel petrol exhaust puc idling traffic bs6 ev metro bus",
+ a:"Keep the PUC certificate valid, service the engine, switch off at signals and keep tyres inflated. Metro, bus, walking, cycling and carpooling cut exhaust the most. BS-VI and electric vehicles emit far less at the tailpipe.",
+ ah:"PUC प्रमाणपत्र वैध रखें, इंजन की सर्विस कराएँ, सिग्नल पर इंजन बंद करें और टायरों में हवा पूरी रखें। मेट्रो, बस, पैदल, साइकिल और कारपूल सबसे ज़्यादा धुआँ घटाते हैं। BS-VI और इलेक्ट्रिक वाहन कहीं कम उत्सर्जन करते हैं।"},
+{id:"dust",t:"Road and construction dust",th:"सड़क और निर्माण की धूल",k:"dust construction road building site cement debris malba sweep",
+ a:"Dust rises from bare soil, unpaved roads and building sites, especially in dry summer winds. Rules require covering material, wetting sites and using anti-smog guns. At home, wet-mop instead of dry sweeping.",
+ ah:"धूल खुली मिट्टी, कच्ची सड़कों और निर्माण स्थलों से उठती है, ख़ासकर गर्मियों की सूखी हवा में। नियमों के अनुसार मलबा ढकना, साइट पर पानी छिड़कना और एंटी-स्मॉग गन चलाना ज़रूरी है। घर पर सूखी झाड़ू की जगह गीला पोछा लगाएँ।",go:"detect"},
+{id:"waste",t:"Open waste burning",th:"खुले में कूड़ा जलाना",k:"waste garbage burning landfill leaves plastic burn",
+ a:"Burning garbage, leaves and plastic releases fine smoke and toxic gases close to homes, and it is banned. Segregate wet and dry waste, compost leaves and report burning to your municipal helpline.",
+ ah:"कूड़ा, पत्तियाँ और प्लास्टिक जलाने से घरों के पास बारीक धुआँ और ज़हरीली गैसें निकलती हैं, और यह प्रतिबंधित है। गीला-सूखा कूड़ा अलग करें, पत्तियों की खाद बनाएँ और जलाने की शिकायत नगर निगम हेल्पलाइन पर करें।",go:"detect"},
+{id:"industry",t:"Industry and power plants",th:"उद्योग और बिजलीघर",k:"industry factory power plant chimney stack coal scrubber fgd png",
+ a:"Coal plants and factories emit SO₂, NO₂ and particles. Scrubbers (FGD), continuous emission monitoring and a shift to piped gas (PNG) cut these emissions. Report night-time smoke with a photo, time and place.",
+ ah:"कोयला बिजलीघर और कारख़ाने SO₂, NO₂ और कण छोड़ते हैं। स्क्रबर (FGD), लगातार उत्सर्जन निगरानी और पाइप गैस (PNG) अपनाने से यह घटता है। रात में निकलते धुएँ की शिकायत फ़ोटो, समय और स्थान के साथ करें।",go:"detect"},
+{id:"home",t:"Indoor air at home",th:"घर के अंदर की हवा",k:"indoor home ghar incense agarbatti mosquito coil frying kitchen ventilation window",
+ a:"Incense, mosquito coils, frying, candles and kerosene make indoor PM2.5 spike. On bad days keep windows shut, use an exhaust fan while cooking and air the house in the cleanest afternoon hours.",
+ ah:"अगरबत्ती, मच्छर कॉइल, तलना, मोमबत्ती और केरोसिन घर में PM2.5 बढ़ाते हैं। ख़राब दिनों में खिड़कियाँ बंद रखें, खाना बनाते समय एग्ज़ॉस्ट चलाएँ और दोपहर के सबसे साफ़ समय में घर हवादार करें।"},
+{id:"fuel",t:"Clean cooking fuel",th:"स्वच्छ खाना पकाने का ईंधन",k:"lpg chulha wood coal cooking fuel ujjwala gas stove induction",
+ a:"Wood, dung and coal stoves fill homes with smoke that hurts women and children most. LPG, PNG and induction are far cleaner; the Ujjwala scheme has given over 10 crore LPG connections.",
+ ah:"लकड़ी, उपले और कोयले के चूल्हे घर को धुएँ से भर देते हैं, जिसका सबसे ज़्यादा असर महिलाओं और बच्चों पर होता है। LPG, PNG और इंडक्शन कहीं साफ़ हैं; उज्ज्वला योजना से 10 करोड़ से ज़्यादा LPG कनेक्शन दिए गए हैं।"},
+{id:"health",t:"How pollution harms health",th:"प्रदूषण सेहत को कैसे नुकसान पहुँचाता है",k:"health disease effect harm heart stroke lung diabetes cancer damage nuksan",
+ a:"PM2.5 inflames the lungs and enters the blood. It raises the risk of heart attack, stroke, lung disease, diabetes and lung cancer, and of low birth weight in babies. In India it was linked to about 2.1 million deaths in 2021.",
+ ah:"PM2.5 फेफड़ों में सूजन पैदा करता है और ख़ून में पहुँचता है। इससे हृदयाघात, स्ट्रोक, फेफड़ों की बीमारी, मधुमेह और फेफड़ों के कैंसर का जोखिम, और शिशुओं में कम जन्म-भार का ख़तरा बढ़ता है। भारत में 2021 में लगभग 21 लाख मौतें इससे जुड़ी थीं।"},
+{id:"doctor",t:"When to see a doctor",th:"डॉक्टर से कब मिलें",k:"doctor symptom cough wheeze breathless chest pain hospital emergency inhaler",
+ a:"Seek care for breathlessness, chest pain or tightness, wheezing, a cough that won't settle, or if you need your reliever inhaler more than usual. This app gives general guidance, not medical advice.",
+ ah:"साँस फूलने, सीने में दर्द या जकड़न, घरघराहट, लगातार खाँसी, या सामान्य से ज़्यादा रिलीवर इनहेलर लगने पर डॉक्टर से मिलें। यह ऐप सामान्य मार्गदर्शन देता है, चिकित्सा सलाह नहीं।"},
+{id:"child",t:"Protecting children",th:"बच्चों की सुरक्षा",k:"child children school play outside kid baby",
+ a:"Children breathe more air for their size and their lungs are still growing. Above AQI 200, move play indoors; above 300, keep them inside in the cleanest room. A child-size N95 helps on the way to school.",
+ ah:"बच्चे अपने आकार के हिसाब से ज़्यादा हवा लेते हैं और उनके फेफड़े अभी बढ़ रहे होते हैं। AQI 200 से ऊपर खेल घर के अंदर करें; 300 से ऊपर उन्हें सबसे साफ़ कमरे में रखें। स्कूल जाते समय बच्चों के आकार का N95 मदद करता है।",go:"air"},
+{id:"asthma",t:"Asthma and heart patients",th:"दमा और हृदय रोगी",k:"asthma heart patient inhaler copd bp",
+ a:"Follow your action plan, take preventer medicines as prescribed and keep the reliever inhaler close. Avoid outdoor exertion above AQI 200 and get help early if symptoms worsen.",
+ ah:"अपनी एक्शन प्लान मानें, प्रिवेंटर दवा समय पर लें और रिलीवर इनहेलर पास रखें। AQI 200 से ऊपर बाहर मेहनत न करें और लक्षण बढ़ें तो जल्दी डॉक्टर से मिलें।",go:"air"},
+{id:"preg",t:"Pregnancy and polluted air",th:"गर्भावस्था और प्रदूषित हवा",k:"pregnant pregnancy baby mother",
+ a:"High PM2.5 is linked to low birth weight and early birth. Prefer green, low-traffic routes, avoid exertion on bad days and use a purifier where you sleep.",
+ ah:"ज़्यादा PM2.5 का संबंध कम जन्म-भार और समय से पहले जन्म से है। हरे-भरे, कम ट्रैफ़िक वाले रास्ते चुनें, ख़राब दिनों में मेहनत से बचें और सोने के कमरे में प्यूरीफ़ायर चलाएँ।",go:"air"},
+{id:"elder",t:"Older adults",th:"बुज़ुर्ग",k:"elder elderly old senior grandparent",
+ a:"Older adults have more heart and lung risk. On Poor days, walk indoors or in the afternoon window, keep medicines handy and watch blood pressure and breathing.",
+ ah:"बुज़ुर्गों में हृदय और फेफड़ों का जोखिम ज़्यादा होता है। 'ख़राब' दिनों में घर में या दोपहर में टहलें, दवाइयाँ पास रखें और BP व साँस पर नज़र रखें।",go:"air"},
+{id:"worker",t:"Outdoor workers",th:"बाहर काम करने वाले",k:"worker labour labor guard delivery traffic police vendor construction shift",
+ a:"Traffic police, guards, delivery riders and construction workers face the highest doses. N95 masks, shorter shifts and indoor rest breaks help, and under GRAP employers must control dust on site.",
+ ah:"ट्रैफ़िक पुलिस, गार्ड, डिलीवरी राइडर और निर्माण मज़दूर सबसे ज़्यादा प्रदूषण झेलते हैं। N95, छोटी पालियाँ और अंदर विश्राम मदद करते हैं, और GRAP में साइट पर धूल रोकना नियोक्ता की ज़िम्मेदारी है।",go:"air"},
+{id:"car",t:"Inside a car",th:"कार के अंदर",k:"car ac recirculate cabin filter drive",
+ a:"In traffic, keep windows up and set the AC to recirculate; a good cabin filter cuts the PM2.5 you breathe a lot. Open windows behind trucks and buses bring exhaust straight in.",
+ ah:"ट्रैफ़िक में शीशे बंद रखें और AC को रीसर्कुलेट पर रखें; अच्छा केबिन फ़िल्टर साँस वाले PM2.5 को काफ़ी घटाता है। ट्रक और बस के पीछे खुली खिड़कियाँ धुआँ सीधे अंदर लाती हैं।"},
+{id:"fog",t:"Fog or smog?",th:"कोहरा या स्मॉग?",k:"fog smog mist haze kohra dhund difference",
+ a:"Fog is water droplets and feels damp and white. Smog is smoke and particles: it looks brownish or grey, smells of burning and stings the eyes. Humidity makes particles swell, which is why SAANS asks how the air feels.",
+ ah:"कोहरा पानी की बूँदें है, जो नम और सफ़ेद लगता है। स्मॉग धुआँ और कण है: भूरा या धूसर दिखता है, जलने की गंध आती है और आँखें जलती हैं। नमी से कण फूलते हैं, इसीलिए SAANS पूछता है कि हवा कैसी लगती है।",go:"air"},
+{id:"skyeye",t:"How Sky-eye estimates PM2.5",th:"आसमान-दृष्टि PM2.5 कैसे निकालती है",k:"sky eye visibility koschmieder estimate without sensor how work",
+ a:"Particles scatter light, so the dirtier the air, the shorter you can see. Sky-eye uses the Koschmieder relation b = 3.912 / V, subtracts clean-air scattering and divides by a humidity-adjusted factor. It is about ±35% accurate.",
+ ah:"कण प्रकाश बिखेरते हैं, इसलिए हवा जितनी गंदी, दृश्यता उतनी कम। आसमान-दृष्टि कोशमीडर सूत्र b = 3.912 / V से प्रकाश-विलोपन निकालती है, साफ़ हवा का हिस्सा घटाती है और नमी के अनुसार बँटती है। सटीकता लगभग ±35% है।",go:"air"},
+{id:"detective",t:"How the source detective reasons",th:"स्रोत जासूस कैसे सोचता है",k:"source detective bayes reason evidence probability how work smell",
+ a:"It starts from how likely each source is in this season, then multiplies by the weight of every clue you give: smell, haze colour, time, what's nearby. The scores become percentages, and the clues behind them are listed.",
+ ah:"यह पहले देखता है कि इस मौसम में हर स्रोत कितना संभावित है, फिर आपके हर सुराग (गंध, धुंध का रंग, समय, आसपास क्या है) के भार से गुणा करता है। अंकों को प्रतिशत में बदलकर उनके पीछे के सुराग दिखाता है।",go:"detect"},
+{id:"control",t:"How the control lab works",th:"नियंत्रण प्रयोगशाला कैसे काम करती है",k:"control lab simulator lever policy city how work",
+ a:"Each source's seasonal share is reduced by how much a measure is adopted times how well it works. The remaining PM2.5 is converted back to AQI. It is a teaching model, not a forecast.",
+ ah:"हर स्रोत के मौसमी हिस्से को इस अनुपात में घटाया जाता है कि उपाय कितना अपनाया गया और कितना असरदार है। बचा हुआ PM2.5 वापस AQI में बदला जाता है। यह सीखने का मॉडल है, भविष्यवाणी नहीं।",go:"control"},
+{id:"dose",t:"Your daily dose",th:"आपकी रोज़ की ख़ुराक",k:"dose inhale breathe exposure how much",
+ a:"Dose = PM2.5 × hour-of-day factor × room factor × breathing rate × (1 − mask efficiency) × hours. Running breathes about six times more air than sitting, so timing your exercise matters.",
+ ah:"ख़ुराक = PM2.5 × घंटे का कारक × कमरे का कारक × साँस की दर × (1 − मास्क दक्षता) × घंटे। दौड़ते समय बैठने से लगभग छह गुना ज़्यादा हवा जाती है, इसलिए व्यायाम का समय मायने रखता है।",go:"plan"},
+{id:"cig",t:"Cigarette equivalent",th:"सिगरेट के बराबर",k:"cigarette smoking sigret smoke equal",
+ a:"Breathing 22 µg/m³ of PM2.5 for a whole day is roughly like smoking one cigarette (Berkeley Earth). It is a way to grasp the scale, not an exact medical comparison.",
+ ah:"पूरे दिन 22 µg/m³ PM2.5 में साँस लेना लगभग एक सिगरेट पीने जैसा है (Berkeley Earth)। यह पैमाना समझने का तरीक़ा है, सटीक चिकित्सीय तुलना नहीं।",go:"air"},
+{id:"report",t:"How to file a pollution complaint",th:"प्रदूषण की शिकायत कैसे करें",k:"complaint report shikayat sameer app helpline municipal file",
+ a:"Note the place, time and what you see or smell, take a photo, and send it through CPCB's Sameer app or your municipal helpline. The Detect tab drafts the complaint for you offline.",
+ ah:"स्थान, समय और जो दिख या महक रहा है उसे लिखें, फ़ोटो लें, और CPCB के समीर ऐप या नगर निगम हेल्पलाइन से भेजें। 'पता करें' टैब बिना इंटरनेट के शिकायत तैयार कर देता है।",go:"detect"},
+{id:"law",t:"The law on air pollution",th:"वायु प्रदूषण का क़ानून",k:"law act legal 1981 rule court",
+ a:"The Air (Prevention and Control of Pollution) Act, 1981 lets pollution control boards set standards, inspect and act against polluters. In Delhi-NCR, the Commission for Air Quality Management runs GRAP.",
+ ah:"वायु (प्रदूषण निवारण एवं नियंत्रण) अधिनियम, 1981 प्रदूषण नियंत्रण बोर्डों को मानक तय करने, निरीक्षण करने और प्रदूषकों पर कार्रवाई का अधिकार देता है। दिल्ली-एनसीआर में वायु गुणवत्ता प्रबंधन आयोग GRAP चलाता है।"},
+{id:"students",t:"What students and schools can do",th:"छात्र और स्कूल क्या कर सकते हैं",k:"student school college eco club awareness project teacher",
+ a:"Track daily AQI on a class board, plan sports for the cleanest hours, run no-burning and no-idling campaigns near the gate, and use the control lab for policy role-play.",
+ ah:"कक्षा के बोर्ड पर रोज़ AQI लिखें, खेल सबसे साफ़ समय में रखें, गेट के पास 'कुछ न जलाएँ' और 'इंजन बंद' अभियान चलाएँ, और नियंत्रण प्रयोगशाला से नीति पर रोल-प्ले करें।",go:"act"},
+{id:"offline",t:"Does SAANS need internet?",th:"क्या SAANS को इंटरनेट चाहिए?",k:"offline internet data privacy login track work without network",
+ a:"No. Every calculation, this search and its knowledge base run on your phone. There is no login and no tracking, and your records stay on this device.",
+ ah:"नहीं। हर गणना, यह खोज और इसका ज्ञान-भंडार आपके फ़ोन पर ही चलते हैं। कोई लॉगिन या ट्रैकिंग नहीं, और आपका रिकॉर्ड इसी डिवाइस पर रहता है।"},
+{id:"reduce",t:"How can I help reduce air pollution?",th:"मैं वायु प्रदूषण कम करने में कैसे मदद करूँ?",k:"reduce control stop prevent help kam ghatana rokna solution upay what can i do",
+ a:"Biggest personal wins: take metro, bus, walk or cycle; switch off at red lights; never burn waste or leaves; say no to firecrackers; use LPG or induction; and report polluters. The Act tab counts these actions, and the control lab shows what cities must do.",
+ ah:"सबसे असरदार निजी कदम: मेट्रो, बस, पैदल या साइकिल; लाल बत्ती पर इंजन बंद; कूड़ा या पत्तियाँ कभी न जलाएँ; पटाख़ों को ना; LPG या इंडक्शन; और प्रदूषण फैलाने वालों की शिकायत। 'कदम' टैब ये गिनता है, और नियंत्रण प्रयोगशाला दिखाती है कि शहरों को क्या करना चाहिए।",go:"act"},
+{id:"eyes",t:"Burning eyes and throat",th:"आँखों और गले में जलन",k:"eye eyes throat burning itch irritation sore",
+ a:"Smoke and ozone irritate eyes and throat. Rinse eyes with clean water, drink fluids and stay in cleaner air. See a doctor if it is severe or lasts.",
+ ah:"धुआँ और ओज़ोन आँखों और गले में जलन करते हैं। आँखें साफ़ पानी से धोएँ, पानी पीते रहें और साफ़ हवा में रहें। ज़्यादा या लंबी तकलीफ़ हो तो डॉक्टर से मिलें।"}
+];
+const SYN={
+ pollution:"pradushan pradooshan pollution pollute polluted प्रदूषण प्रदूषित",air:"hawa hava vayu वायु हवा",
+ aqi:"aqi एक्यूआई",pm25:"pm2 pm25 pm2.5",pm10:"pm10",
+ child:"child children kid kids bachcha bacche bachche bacha baccha bacchon bachon बच्चा बच्चे बच्चों बच्ची बालक शिशु",
+ elder:"elder elderly old oldage senior grandparent grandfather grandmother buzurg bujurg budhe dada dadi nana nani बुज़ुर्ग बुजुर्ग बूढ़े दादा दादी",
+ asthma:"asthma dama damaa दमा अस्थमा inhaler इनहेलर",pregnant:"pregnant pregnancy garbhvati garbhavati गर्भवती गर्भावस्था",
+ worker:"worker workers labour labor mazdoor mazdur guard delivery मज़दूर मजदूर श्रमिक",
+ heart:"heart dil हृदय दिल",lung:"lung lungs fefde phephde फेफड़े फेफड़ा",
+ mask:"mask masks मास्क",n95:"n95 kn95 ffp2",purifier:"purifier purifiers cleaner प्यूरीफ़ायर प्यूरीफायर",
+ outside:"outside outdoor outdoors bahar baahar बाहर",inside:"inside indoor indoors andar ghar अंदर घर",
+ play:"play playing khel khelna khelne khele खेल खेलना खेलने खेलें खेलना",
+ run:"run running runs jog jogging daud daudna daudne दौड़ दौड़ना दौड़ने",
+ walk:"walk walking sair tehelna tahalna chalna टहलना टहलने सैर चलना",
+ morning:"morning subah सुबह",evening:"evening shaam sham शाम",time:"time samay waqt timing समय वक़्त",
+ best:"best acha accha sabse सबसे अच्छा",
+ plant:"plant plants paudha paudhe पौधा पौधे",firecracker:"firecracker firecrackers cracker crackers patakha patakhe patake pataka पटाख़ा पटाखा पटाखे पटाखों आतिशबाज़ी",
+ stubble:"stubble parali parli पराली",smoke:"smoke dhuan dhua dhuaan धुआँ धुआ धुएँ धुंआ",dust:"dust dhool dhul dhool धूल",
+ waste:"waste garbage trash kooda kuda kachra कूड़ा कूड़े कचरा",burn:"burn burning jalana jalane jalaana जलाना जलाने जलाकर",
+ vehicle:"vehicle vehicles gaadi gadi traffic वाहन गाड़ी गाड़ियाँ ट्रैफ़िक",complaint:"complaint complain report shikayat शिकायत",
+ winter:"winter winters sardi sardiyon thand सर्दी सर्दियों ठंड",fog:"fog kohra kohara mist कोहरा धुंध",smog:"smog स्मॉग",
+ cough:"cough khansi खाँसी खांसी",eye:"eye eyes aankh ankh आँख आँखें",doctor:"doctor daktar डॉक्टर",
+ school:"school schools स्कूल विद्यालय",room:"room kamra kamre कमरा कमरे",visibility:"visibility dikhna dikhai दृश्यता दिखाई",
+ source:"source sources srot स्रोत",law:"law kanoon kanun क़ानून कानून अधिनियम",health:"health sehat swasthya स्वास्थ्य सेहत",
+ season:"season mausam मौसम",festival:"festival diwali त्योहार दिवाली",cigarette:"cigarette cigarettes sigret सिगरेट",
+ grap:"grap ग्रैप",ncap:"ncap",exercise:"exercise workout gym vyayam व्यायाम कसरत",
+ cooking:"cooking chulha चूल्हा खाना",fuel:"fuel indhan ईंधन",safe:"safe surakshit सुरक्षित",limit:"limit seema सीमा",
+ industry:"industry factory factories kaarkhana कारख़ाना कारखाना उद्योग",car:"car कार",
+ offline:"offline internet net ऑफ़लाइन इंटरनेट",doseword:"dose khurak ख़ुराक",
+ why:"why kyon kyu क्यों",harm:"harm nuksan nuksaan नुकसान हानि",danger:"danger khatra ख़तरा खतरा",reduce:"reduce reducing control prevent ghatana ghataye ghatane rokna roke kam कम घटाना घटाएँ रोकना उपाय"
+};
+
+const ASKX={en:["AQI 320, can my child play outside?","PM2.5 150 and PM10 280: what is the AQI?","Which mask stops PM2.5?","Visibility is 1.5 km and it feels humid","Purifier for a 4x3x3 room","Best time for a walk today?","Why is winter air so bad?","GRAP stage 3 rules","patakhe se kitna pradushan hota hai?"],
+ hi:["AQI 320 है, क्या बच्चा बाहर खेल सकता है?","PM2.5 150 और PM10 280 हो तो AQI कितना?","कौन-सा मास्क PM2.5 रोकता है?","दृश्यता 1.5 किमी है और हवा नम है","4x3x3 कमरे के लिए प्यूरीफ़ायर","आज सैर का सबसे अच्छा समय कब है?","सर्दियों में हवा ख़राब क्यों होती है?","GRAP चरण 3 में क्या बंद होता है?","dama ke mareez kya karein?"]};
+let ENG=null;const eng=()=>ENG||(ENG=new AskCore.Engine(KB,SYN));
+const PROF={child:"pChild",elder:"pOld",asthma:"pAsth",heart:"pAsth",lung:"pAsth",pregnant:"pPreg",worker:"pWork"};
+const ACTW={run:"vRun",exercise:"vRun",play:"vPlay",walk:"vWalk",school:"vCommute",commute:"vCommute",office:"vCommute"};
+const PRX={pm25:/pm\s*2\s*[.,]?\s*5[^\d]{0,16}?(\d+(?:\.\d+)?)/,pm10:/pm\s*10[^\d]{0,16}?(\d+(?:\.\d+)?)/,no2:/(?:no2|no₂)[^\d]{0,16}?(\d+(?:\.\d+)?)/,o3:/(?:o3|o₃|ozone|ओज़ोन|ओजोन)[^\d]{0,16}?(\d+(?:\.\d+)?)/,so2:/(?:so2|so₂)[^\d]{0,16}?(\d+(?:\.\d+)?)/,co:/(?:\bco\b|carbon monoxide)[^\d]{0,16}?(\d+(?:\.\d+)?)/,nh3:/(?:nh3|nh₃|ammonia|अमोनिया)[^\d]{0,16}?(\d+(?:\.\d+)?)/};
+function parseQ(q,terms){let s=AskCore.digits(q).toLowerCase().normalize("NFC");const e={pol:{}};const N="(\\d+(?:\\.\\d+)?)";
+  for(const p in PRX){const m=s.match(PRX[p]);if(m){e.pol[p]=parseFloat(m[1]);s=s.replace(m[0]," ")}}
+  let m=s.match(/(\d+(?:\.\d+)?)\s*(m|ft|feet|मीटर|फ़ुट|फुट)?\s*[x×*]\s*(\d+(?:\.\d+)?)\s*(?:m|ft|feet|मीटर|फ़ुट|फुट)?(?:\s*[x×*]\s*(\d+(?:\.\d+)?))?/);
+  if(m){const ft=/ft|feet|फ़ुट|फुट/.test(m[0])?.3048:1;e.room=[+m[1]*ft,+m[3]*ft,m[4]?+m[4]*ft:3];s=s.replace(m[0]," ")}
+  else{m=s.match(/(\d+)\s*(?:sq\.?\s*ft|sqft|square\s*f(?:ee|oo)t|वर्ग\s*फ)/);if(m){const a=+m[1]*.0929;e.room=[Math.sqrt(a),Math.sqrt(a),3]}}
+  m=s.match(new RegExp("(?:aqi|एक्यूआई|ए\\s?क्यू\\s?आई)[^\\d]{0,16}?"+N))||s.match(new RegExp(N+"\\s*(?:aqi|एक्यूआई)"));if(m){e.aqi=clamp(Math.round(+m[1]),0,500);s=s.replace(m[0]," ")}
+  const visCtx=/visib|dikh|दिख|दृश्य|nazar|नज़र|नजर|\bsee\b|landmark/.test(s);
+  m=s.match(/(\d+(?:\.\d+)?)\s*(?:km|kilomet|किमी|किलोमीटर|कि\.?\s?मी)/);if(m&&(visCtx||(e.aqi==null&&!Object.keys(e.pol).length)))e.vis=+m[1];
+  else{m=s.match(/(\d+)\s*(?:m|meter|metre|meters|metres|मीटर)(?![a-z])/);if(m&&visCtx)e.vis=+m[1]/1000}
+  if(e.aqi==null&&!Object.keys(e.pol).length&&e.vis==null&&!e.room){m=s.match(/\b(\d{2,3})\b/);if(m&&+m[1]<=500&&/air|hawa|हवा|pollution|प्रदूषण|pradushan|level|स्तर/.test(s))e.aqi=+m[1]}
+  e.rh=/fog|misty|mist|kohra|कोहरा|धुंध/.test(s)?"foggy":/humid|\bnam\b|नम|moist|damp/.test(s)?"humidW":/\bdry\b|sookh|sukh|सूख/.test(s)?"dry":"normal";
+  terms.forEach(w=>{if(PROF[w]&&(!e.prof||SENS[PROF[w]]>SENS[e.prof]))e.prof=PROF[w];if(!e.act&&ACTW[w])e.act=ACTW[w]});
+  e.when=/\bwhen\b|\bkab\b|timing|best time|कब|समय|waqt|\btime\b/.test(s);
+  e.out=/bahar|baahar|outside|outdoor|बाहर|go out|\bsafe\b|सुरक्षित|should i|can i|sakt|सकत|जाऊँ|जाऊं|jaun|jau\b/.test(s);
+  return e}
+function bandOf(p,c){const b=BP[p];if(c>=b[6])return null;for(let i=1;i<7;i++)if(c<=b[i])return i;return null}
+function stepsHtml(p,c){const b=BP[p],i=bandOf(p,c),si=subIndex(p,c);if(i==null)return `${PNAME[p]} ${c} ≥ ${b[6]} → AQI 500`;
+  return `${PNAME[p]} = ${c} ${PUNIT[p]} ∈ [${b[i-1]}–${b[i]}] → AQI [${AQ[i-1]}–${AQ[i]}]<br>= ${AQ[i-1]} + (${c} − ${b[i-1]}) × ${AQ[i]-AQ[i-1]} ÷ ${b[i]-b[i-1]} = <b>${si}</b>`}
+function aqiCard(aqi,pm,e,lead){const c=catOf(aqi),prof=e.prof||S.profile,act=e.act||S.actv,list=advList(prof,c),v=verdictHtml(aqi,prof,act,windowFor(pm,aqi));
+  const say=`AQI ${aqi}, ${t("cat"+c)}. ${v.text} ${list.join(" ")}`;
+  return `<section class="panel ans"><div class="kind">${t("calcT")}</div>${lead||""}
+   <div class="big3"><b style="color:${CATC[c]}">${aqi}</b><span class="catname" style="background:${CATC[c]}">${t("cat"+c)}</span></div>
+   ${v.html}<div class="kv"><span>PM2.5 ≈ <b>${Math.round(pm)}</b> µg/m³</span><span><b>${(pm/22).toFixed(1)}</b> ${t("cigS")}</span><span>GRAP <b>${grapOf(aqi)}</b></span></div>
+   <p class="muted">${t("imp"+c)}</p><ul class="advice" style="margin-top:6px">${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+   <div class="acts"><button class="btn sm" data-use="${aqi}">${t("useAqi")}</button>${sayBtn("c"+aqi,say)}</div></section>`}
+function askCompute(e,q){const out=[],und=[];
+  const pols=Object.keys(e.pol);
+  if(pols.length){let mx=-1,dom=null;const subs={};pols.forEach(p=>{const si=subIndex(p,e.pol[p]);subs[p]=si;und.push(PNAME[p]+" "+e.pol[p]);if(si>mx){mx=si;dom=p}});
+    const pm=e.pol.pm25!=null?e.pol.pm25:aqiToPm(mx);
+    out.push(aqiCard(mx,pm,e,`<div class="steps">${pols.map(p=>stepsHtml(p,e.pol[p])).join("<br>")}${pols.length>1?`<br>${t("oAqi")} → <b>${mx}</b> (${PNAME[dom]})`:""}</div>`))}
+  else if(e.aqi!=null){und.push("AQI "+e.aqi);out.push(aqiCard(e.aqi,aqiToPm(e.aqi),e))}
+  if(e.vis!=null&&!pols.length){const pm=skyPm(clamp(e.vis,.05,60),e.rh),a=subIndex("pm25",pm);und.push(t("visT")+" "+e.vis+" km");if(e.rh!=="normal")und.push(t(e.rh));
+    out.push(aqiCard(a,pm,e,`<div class="steps">b = 3.912 ÷ ${e.vis} km = ${(3.912/e.vis).toFixed(2)} km⁻¹<br>PM2.5 ≈ (b − 0.013) ÷ (4 × ${RHF[e.rh]}) × 1000 ≈ <b>${Math.round(pm)}</b> µg/m³ (±35%)</div>`))}
+  if(e.room){const[l,w,h]=e.room.map(x=>+x.toFixed(1)),v=l*w*h,c=v*5;und.push(t("roomT")+` ${l}×${w}×${h} m`);
+    out.push(`<section class="panel ans"><div class="kind">${t("calcT")}</div><h2>${t("cadrT")}</h2><div class="dose"><b>${Math.round(c)}</b><span class="muted">m³/h (${Math.round(c/1.699)} CFM)</span></div>
+     <div class="steps">${l} × ${w} × ${h} = ${v.toFixed(1)} m³<br>${t("cadrW")}: ${v.toFixed(1)} × 5 = <b>${Math.round(c)} m³/h</b></div>
+     <div class="acts"><button class="btn sm ghost" data-roomgo="${l},${w},${h}">${t("openTab")}: ${t("tPlan")}</button></div></section>`)}
+  if(e.prof)und.push(t(e.prof));if(e.act)und.push(t(e.act));
+  if(!out.length&&(e.prof||e.act)&&(e.out||e.when)){const r=reading();out.push(aqiCard(r.aqi,r.pm,e,`<p class="tiny">${t("todayBased")}</p>`))}
+  if(e.when){const r=reading(),pm=pols.length?(e.pol.pm25??aqiToPm(subIndex(pols[0],e.pol[pols[0]]))):e.aqi!=null?aqiToPm(e.aqi):r.pm,{b,w,f}=bestWindow();und.push(t("winT"));
+    out.push(`<section class="panel ans"><div class="kind">${t("calcT")}</div><h2>${t("winT")}</h2>
+     <div class="row"><div class="grow"><div class="tiny">${t("bestWin")}</div><b style="color:var(--leaf);font-size:22px">${hh(b)}–${hh(b+2)}</b><div class="tiny">AQI ≈ ${subIndex("pm25",pm*f[b])}</div></div><div class="grow"><div class="tiny">${t("worstWin")}</div><b style="color:var(--c4);font-size:22px">${hh(w)}–${hh(w+2)}</b><div class="tiny">AQI ≈ ${subIndex("pm25",pm*f[w])}</div></div></div>
+     <p class="tiny" style="margin-top:8px">${t("typ")}</p><div class="acts"><button class="btn sm ghost" data-goto="plan">${t("openTab")}: ${t("tPlan")}</button>${sayBtn("win",`${t("winT")}: ${hh(b)} – ${hh(b+2)}. ${t("worstWin")}: ${hh(w)} – ${hh(w+2)}.`)}</div></section>`)}
+  return{out,und}}
+function askIdle(){const ex=ASKX[S.lang]||ASKX.en;
+  return `${S.askHist.length?`<h3 class="h3" style="margin-top:14px">${t("recentT")}</h3><div class="ex">${S.askHist.map(x=>`<button data-ask="${esc(x)}">${esc(x)}</button>`).join("")}</div>`:""}
+  <h3 class="h3" style="margin-top:14px">${t("tryT")}</h3><div class="ex">${ex.map(x=>`<button data-ask="${esc(x)}">${esc(x)}</button>`).join("")}</div>`}
+function askRun(q){const out=$("#askOut");if(!out)return;q=(q||"").trim();S.askQ=q;if(!q){out.innerHTML=askIdle();return save()}
+  const E=eng(),res=E.search(q,5),e=parseQ(q,res.terms),hi=/[\u0900-\u097F]/.test(q)||S.lang==="hi",aL=hi?"hi":"en",keep=S.lang;if(hi)S.lang="hi";const calc=askCompute(e,q);
+  const raw={};E.toks(q).forEach(x=>{raw[x.w]=raw[x.w]||x.raw});
+  const top=res.hits[0],good=top&&top.s>=1.2,rel=good?res.hits.slice(1).filter(h=>h.s>=top.s*.35).slice(0,3):[];
+  const SKIPW=new Set(["pm25","pm10","pm2","aqi","no2","o3","so2","co","nh3"]),words=(good?top.m:[]).filter(w=>!SKIPW.has(w));
+  let html=(calc.und.length||words.length||res.fixed.length)?`<div class="und"><b>${t("undT")}:</b>${calc.und.map(x=>`<span class="ent">${esc(x)}</span>`).join("")}${words.slice(0,5).map(w=>raw[w]||w).filter(w=>!calc.und.some(u=>String(u).toLowerCase().includes(w.toLowerCase()))).map(w=>`<span class="ent w">${esc(w)}</span>`).join("")}${res.fixed.map(([a,b])=>`<span class="ent fix">${t("fixT")}: ${esc(a)} → ${esc(b)}</span>`).join("")}</div>`:"";
+  html+=calc.out.join("");
+  if(good){const A=hi?top.d.ah:top.d.a,T1=hi?top.d.th:top.d.t;
+    html+=`<section class="panel ans"><div class="kind">${calc.out.length?t("askAbout"):t("bestT")}</div><h2 style="margin-top:4px">${esc(T1)}</h2><p>${esc(A)}</p><div class="acts">${top.d.go?`<button class="btn sm ghost" data-goto="${top.d.go}">${t("openTab")}: ${t(TABS.find(x=>x[0]===top.d.go)[1])}</button>`:""}${sayBtn("kb0",T1+". "+A,aL)}</div>
+    ${rel.length?`<h3 class="h3" style="margin-top:14px">${t("relT")}</h3>${rel.map((h,i)=>`<details class="rel"><summary>${esc(hi?h.d.th:h.d.t)}</summary><p>${esc(hi?h.d.ah:h.d.a)}</p><div class="acts">${sayBtn("kb"+(i+1),(hi?h.d.th:h.d.t)+". "+(hi?h.d.ah:h.d.a),aL)}</div></details>`).join("")}`:""}</section>`}
+  if(!good&&!calc.out.length)html+=`<section class="panel"><p>${t("noHit")}</p></section>${askIdle()}`;
+  html+=`<p class="stat">🔒 ${t("statT").replace("{n}",res.size).replace("{ms}",Math.max(1,Math.round(res.ms)))}</p>`;
+  S.lang=keep;out.innerHTML=html;
+  if(good||calc.out.length){S.askHist=[q,...S.askHist.filter(x=>x!==q)].slice(0,5)}save()}
+function viewAsk(){return `<div class="view"><h1>${t("askH")}</h1><p class="sub">${t("askS")}</p>
+  <div class="askbox"><input type="search" id="askIn" enterkeyhint="search" autocomplete="off" placeholder="${esc(t("askPh"))}" value="${esc(S.askQ||"")}" aria-label="${t("askH")}">
+   <button class="ibtn" id="askMic" aria-label="${t("micOn")}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+   <button class="ibtn go" id="askGo" aria-label="${t("tAsk")}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  <div id="askOut"></div></div>`}
+/* quick tour */
+function showTour(i){i=i||0;let el=$("#tour");if(!el){el=document.createElement("div");el.id="tour";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");document.body.appendChild(el)}
+  const ill=["🌫️","💬","🧭"][i];el.innerHTML=`<div class="card"><div class="dots">${[0,1,2].map(k=>`<i class="${k===i?"on":""}"></i>`).join("")}</div><div class="ill" aria-hidden="true">${ill}</div><h2>${t("tour"+(i+1)+"H")}</h2><p>${t("tour"+(i+1))}</p>
+  <div class="row" style="margin-top:16px;justify-content:space-between"><button class="btn ghost" data-tour="x">${t("skip")}</button><button class="btn" data-tour="${i<2?i+1:"x"}">${i<2?t("next"):t("start")}</button></div></div>`;
+  const b=el.querySelector('[data-tour]:last-child');if(b)b.focus()}
+function endTour(){const el=$("#tour");if(el)el.remove();S.toured=true;save()}
+let REC=null;
+function micStart(){const b=$("#askMic");if(REC){try{REC.stop()}catch(x){}REC=null;b&&b.classList.remove("rec");return}
+  if(!AskCore.canListen)return toast(t("micNo"));b&&b.classList.add("rec");toast(t("micOn"));
+  REC=AskCore.listen(S.lang,txt=>{REC=null;b&&b.classList.remove("rec");$("#askIn").value=txt;askRun(txt)},err=>{REC=null;b&&b.classList.remove("rec");toast(err==="network"||err==="service-not-allowed"?t("micNet"):t("micNo"))})}
+let SPK=null;
+function sayToggle(btn){const k=btn.dataset.say;if(SPK===btn){AskCore.hush();btn.classList.remove("on");btn.textContent="🔊 "+t("listen");SPK=null;return}
+  if(SPK){SPK.classList.remove("on");SPK.textContent="🔊 "+t("listen")}
+  const ok=AskCore.speak(SAY[k]||"",SAYL[k]||S.lang,()=>{btn.classList.remove("on");btn.textContent="🔊 "+t("listen");if(SPK===btn)SPK=null});
+  if(!ok)return toast(t("noVoice"));SPK=btn;btn.classList.add("on");btn.textContent="■ "+t("stop")}
 /* ---------- router & events ---------- */
-const VIEWS={air:viewAir,detect:viewDetect,control:viewControl,plan:viewPlan,act:viewAct};
+const VIEWS={air:viewAir,detect:viewDetect,ask:viewAsk,control:viewControl,plan:viewPlan,act:viewAct};
 function render(){renderTabs();document.documentElement.lang=S.lang==="hi"?"hi":"en";$("#lang").textContent=S.lang==="hi"?"EN":"हिं";
-  $("#view").innerHTML=VIEWS[S.tab]();applyMood(reading());if(S.tab==="air"){orb.target=reading();if(!orb.raf)orb.raf=requestAnimationFrame(orbLoop)}net();save()}
+  AskCore.hush();SPK=null;document.documentElement.classList.toggle("big",!!S.big);$("#bigT").setAttribute("aria-pressed",!!S.big);
+  $("#view").innerHTML=VIEWS[S.tab]();applyMood(reading());if(S.tab==="air"){orb.target=reading();if(!orb.raf)orb.raf=requestAnimationFrame(orbLoop)}
+  if(S.tab==="ask")askRun(S.askQ);net();save()}
 function go(tab){S.tab=tab;try{history.replaceState(null,"","#"+tab)}catch(e){}render();window.scrollTo({top:0})}
 function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1800)}
 function net(){$("#net").textContent=navigator.onLine?t("online"):t("offline")}
 addEventListener("online",net);addEventListener("offline",net);
 $("#lang").onclick=()=>{S.lang=S.lang==="hi"?"en":"hi";render()};
 document.addEventListener("click",e=>{
-  const el=e.target.closest("[data-tab],[data-mode],[data-g],[data-preset],[data-act],[data-myth],[data-del],#addRow,#copyC,#saveC");if(!el)return;
+  const el=e.target.closest("[data-tab],[data-mode],[data-g],[data-preset],[data-act],[data-myth],[data-del],#addRow,#copyC,#saveC,[data-ask],[data-say],[data-use],[data-goto],[data-roomgo],[data-tour],#askGo,#askMic,#bigT,#helpT");if(!el)return;
   if(el.dataset.tab)return go(el.dataset.tab);
+  if(el.dataset.tour!=null){return el.dataset.tour==="x"?endTour():showTour(+el.dataset.tour)}
+  if(el.dataset.ask!=null){$("#askIn").value=el.dataset.ask;return askRun(el.dataset.ask)}
+  if(el.id==="askGo"){const v=$("#askIn").value;$("#askIn").blur();return askRun(v)}
+  if(el.id==="askMic")return micStart();
+  if(el.dataset.say)return sayToggle(el);
+  if(el.dataset.use){S.mode="dial";S.aqi=+el.dataset.use;save();toast(t("usedAqi"));return go("air")}
+  if(el.dataset.goto)return go(el.dataset.goto);
+  if(el.dataset.roomgo){S.room=el.dataset.roomgo.split(",").map(Number);return go("plan")}
+  if(el.id==="bigT"){S.big=!S.big;toast(S.big?t("bigOn"):t("bigOff"));return render()}
+  if(el.id==="helpT")return showTour(0);
   if(el.dataset.mode){S.mode=el.dataset.mode;return render()}
   if(el.dataset.g){const g=el.dataset.g,v=el.dataset.v;
     if(g==="profile"){S.profile=v;save();document.querySelectorAll('[data-g="profile"]').forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));return updAir()}
+    if(g==="actv"){S.actv=v;save();document.querySelectorAll('[data-g="actv"]').forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));return updAir()}
     if(g==="rh"){S.rh=v;save();document.querySelectorAll('[data-g="rh"]').forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));return updAir()}
     if(g==="near"){const a=S.det.near||[];S.det.near=a.includes(v)?a.filter(x=>x!==v):[...a,v]}else S.det[g]=S.det[g]===v&&g!=="season"?null:v;
     document.querySelectorAll(`[data-g="${g}"]`).forEach(b=>b.setAttribute("aria-pressed",g==="near"?S.det.near.includes(b.dataset.v):b.dataset.v===S.det[g]));
@@ -566,7 +979,9 @@ document.addEventListener("click",e=>{
   if(el.id==="saveC"){const top=detScores()[0];S.reports.push({when:new Date().toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}),src:T.en[SRCK[top.s]],loc:S.det.loc||"",text:$("#cmp").value});save();$("#savedList").innerHTML=savedHtml();return toast(t("savedOk"))}
 });
 function toggleAct(el){const k=el.dataset.act,d=today(),a=S.hist[d]||[];S.hist[d]=a.includes(k)?a.filter(x=>x!==k):[...a,k];save();render();const n=document.querySelector(`[data-act="${k}"]`);if(n)n.focus()}
-document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-act],[data-myth]")){e.preventDefault();e.target.click()}});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-act],[data-myth]")){e.preventDefault();e.target.click()}
+  if(e.key==="Enter"&&e.target.id==="askIn"){e.preventDefault();e.target.blur();askRun(e.target.value)}
+  if(e.key==="Escape"&&$("#tour"))endTour()});
 document.addEventListener("input",e=>{const el=e.target;
   if(el.id==="dial"||el.id==="dialN"){S.aqi=clamp(parseInt(el.value)||0,0,500);const o=el.id==="dial"?$("#dialN"):$("#dial");o.value=S.aqi;updAir();return save()}
   if(el.dataset.pol){S.meter[el.dataset.pol]=el.value;updAir();return save()}
@@ -579,6 +994,8 @@ document.addEventListener("input",e=>{const el=e.target;
 const h0=(location.hash||"").slice(1);if(VIEWS[h0])S.tab=h0;
 addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(VIEWS[h]&&h!==S.tab)go(h)});
 render();
+let EMB=false;try{EMB=window.self!==window.top}catch(e){EMB=true}
+if(!S.toured&&!EMB)showTour(0);
 
 </script>
 </body>
